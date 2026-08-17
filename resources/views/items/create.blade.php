@@ -17,19 +17,13 @@
             <label>Category</label>
             <select name="category_id" class="form-control" required>
                 <option value="">-- Select Category --</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @foreach($categoryOptions as $option)
+                    <option value="{{ $option['id'] }}" {{ (string) old('category_id') === (string) $option['id'] ? 'selected' : '' }}>
+                        {{ $option['label'] }}
+                    </option>
                 @endforeach
             </select>
-        </div>
-        <div class="mb-3">
-            <label>Subcategory</label>
-            <select name="subcategory_id" class="form-control">
-                <option value="">-- Select Subcategory --</option>
-                @foreach($subCategories as $subCategory)
-                    <option value="{{ $subCategory->id }}">{{ $subCategory->name }}</option>
-                @endforeach
-            </select>
+            <small class="form-text text-muted">Pick the most specific (lowest) category that applies, e.g. "Cold Beverage" rather than "Beverages".</small>
         </div>
         <div class="mb-3">
             <label>Quantity</label>

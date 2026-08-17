@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OtpController;
-use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
@@ -21,7 +20,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::resource('categories', CategoryController::class);
     Route::resource('items', ItemController::class);
-    Route::resource('subcategories', SubCategoryController::class);
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/quick-logout', [UserController::class, 'logout'])->name('user.logout');
 });

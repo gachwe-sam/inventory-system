@@ -15,7 +15,6 @@
                 <th>Name</th>
                 <th>Description</th>
                 <th>Category</th>
-                <th>Subcategory</th>
                 <th>Quantity</th>
                 <th>Expiry Date</th>
                 <th>Unit Price</th>
@@ -28,8 +27,13 @@
             <tr>
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->description }}</td>
-                <td>{{ $item->category->name ?? 'N/A' }}</td>
-                <td>{{ $item->subcategory->name ?? 'N/A' }}</td>
+                <td>
+                    @if($item->category)
+                        {{ $item->category->parent ? $item->category->parent->name . ' > ' : '' }}{{ $item->category->name }}
+                    @else
+                        N/A
+                    @endif
+                </td>
                 <td>{{ $item->quantity }}</td>
                 <td>{{ $item->expiry_date?->format('Y-m-d') }}</td>
                 <td>{{ $item->unit_price }}</td>
