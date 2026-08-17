@@ -15,15 +15,21 @@
         </div>
         <div class="mb-3">
             <label>Category</label>
+            @php $selectedCategoryId = old('category_id'); @endphp
             <select name="category_id" class="form-control" required>
                 <option value="">-- Select Category --</option>
                 @foreach($categoryOptions as $option)
-                    <option value="{{ $option['id'] }}" {{ (string) old('category_id') === (string) $option['id'] ? 'selected' : '' }}>
-                        {{ $option['label'] }}
+                    @php $isSelected = (string) $selectedCategoryId === (string) $option['id']; @endphp
+                    <option
+                        value="{{ $option['id'] }}"
+                        {{ $isSelected ? 'selected' : '' }}
+                        {{ (! $option['is_leaf'] && ! $isSelected) ? 'disabled' : '' }}
+                    >
+                        {{ $option['label'] }}{{ ! $option['is_leaf'] ? ' (has subcategories)' : '' }}
                     </option>
                 @endforeach
             </select>
-            <small class="form-text text-muted">Pick the most specific (lowest) category that applies, e.g. "Cold Beverage" rather than "Beverages".</small>
+            <small class="form-text text-muted">Items can only be filed under the lowest-level subcategory — categories with subcategories of their own are grayed out.</small>
         </div>
         <div class="mb-3">
             <label>Quantity</label>

@@ -58,7 +58,20 @@ class ItemController extends Controller
         return $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => [
+                'required',
+                'exists:categories,id',
+                function ($attribute, $value, $fail) {
+                    $category = Category::find($value);
+
+                    // Items must live at the bottom of the tree: if the chosen
+                    // category still has subcategories of its own, it isn't the
+                    // most specific place this item could be filed.
+                    if ($category && ! $category->isLeaf()) {
+                        $fail("\"{$category->name}\" has its own subcategories — please choose the lowest-level subcategory instead.");
+                    }
+                },
+            ],
             'quantity' => 'required|numeric',
             'expiry_date' => 'nullable|date',
             'unit_price' => 'nullable|numeric',
@@ -69,6 +82,8 @@ class ItemController extends Controller
     /**
      * Every category, flattened out with an indentation depth so the <select>
      * can show the tree (e.g. "Beverages" then "-- Cold Beverage" beneath it).
+     * is_leaf flags categories that still have subcategories, so the view can
+     * gray those out — items may only be filed under a leaf category.
      */
     private function categoryOptions()
     {
@@ -79,6 +94,9 @@ class ItemController extends Controller
                 $flattened->push([
                     'id' => $category->id,
                     'label' => str_repeat('— ', $depth) . $category->name,
+                    // childrenRecursive is already eager-loaded by Category::tree(),
+                    // so this is a plain collection check, not an extra query.
+                    'is_leaf' => $category->childrenRecursive->isEmpty(),
                 ]);
                 $walk($category->childrenRecursive, $depth + 1);
             }
