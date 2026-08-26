@@ -16,6 +16,10 @@
                 @auth
                     <a class="nav-link" href="{{ route('categories.index') }}">Categories</a>
                     <a class="nav-link" href="{{ route('items.index') }}">Items</a>
+                    @role('admin')
+                        <a class="nav-link" href="{{ route('branches.index') }}">Branches</a>
+                        <a class="nav-link" href="{{ route('users.index') }}">Users</a>
+                    @endrole
                     <form action="{{ route('logout') }}" method="POST" class="d-inline">
                         @csrf
                         <button type="submit" class="btn btn-link nav-link">Logout</button>

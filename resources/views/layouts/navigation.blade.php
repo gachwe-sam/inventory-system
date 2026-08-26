@@ -15,6 +15,29 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+                        {{ __('Categories') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('items.index')" :active="request()->routeIs('items.*')">
+                        {{ __('Items') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('stock.index')" :active="request()->routeIs('stock.*')">
+                        {{ __('Adjust Stock') }}
+                    </x-nav-link>
+                    @role('branch_manager')
+                        <x-nav-link :href="route('manager.staff.index')" :active="request()->routeIs('manager.*')">
+                            {{ __('Staff Permissions') }}
+                    </x-nav-link>
+                    @endrole
+
+                    @role('admin')
+                        <x-nav-link :href="route('branches.index')" :active="request()->routeIs('branches.*')">
+                            {{ __('Branches') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                            {{ __('Users') }}
+                        </x-nav-link>
+                    @endrole
                 </div>
             </div>
 
@@ -70,6 +93,29 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+                {{ __('Categories') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('items.index')" :active="request()->routeIs('items.*')">
+                {{ __('Items') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('stock.index')" :active="request()->routeIs('stock.*')">
+                {{ __('Adjust Stock') }}
+            </x-responsive-nav-link>
+            @role('branch_manager')
+               <x-responsive-nav-link :href="route('manager.staff.index')" :active="request()->routeIs('manager.*')">
+                   {{ __('Staff Permissions') }}
+                </x-responsive-nav-link>
+            @endrole
+
+            @role('admin')
+                <x-responsive-nav-link :href="route('branches.index')" :active="request()->routeIs('branches.*')">
+                    {{ __('Branches') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                    {{ __('Users') }}
+                </x-responsive-nav-link>
+            @endrole
         </div>
 
         <!-- Responsive Settings Options -->

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Support\StockPermissions;
 
 class UserController extends Controller
 {
@@ -60,4 +61,35 @@ class UserController extends Controller
         $request->session()->regenerateToken();
         return redirect('/')->with('success', 'You have been logged out.');
     }
+
+    public function index()
+{
+    $users = User::with(['branch', 'roles'])->orderBy('name')->paginate(14);
+    return view('users.index', compact('users'));
+}
+
+public function edit(User $user)
+{
+    $branches = \App\Models\Branch::orderBy('name')->get();
+    $roles = \Spatie\Permission\Models\Role::orderBy('name')->get();
+    $permissions = StockPermissions::ALL;
+    return view('users.edit', compact('user', 'branches', 'roles', 'permissions'));
+}
+
+public function update(Request $request, User $user)
+{
+    $validated = $request->validate([
+        'branch_id' => 'nullable|exists:branches,id',
+        'role' => 'required|exists:roles,name',
+        'permissions' => 'array',
+        'permissions.*' => Rule::in(StockPermissions::ALL),
+    ]);
+
+    $user->update(['branch_id' => $validated['branch_id']]);
+    $user->syncRoles([$validated['role']]);
+    $user->syncPermissions($validated['permissions'] ?? []);
+
+    return redirect()->route('users.index')->with('success', 'User updated.');
+}
+
 }

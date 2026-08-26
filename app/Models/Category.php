@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -15,9 +16,7 @@ class Category extends Model
 
     protected static function booted(): void
     {
-        // Soft-deleting a category should also soft-delete every category
-        // nested underneath it, so a "deleted" branch doesn't keep showing
-        // up as a dangling child in the tree.
+        
         static::deleting(function (Category $category) {
             if ($category->isForceDeleting()) {
                 return;
@@ -31,26 +30,19 @@ class Category extends Model
         });
     }
 
-    /**
-     * The category this one is nested under. Null for a top-level category.
-     */
+    
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    /**
-     * Direct children only (one level down), e.g. Beverages -> [Cold Beverage, Hot Beverage].
-     */
+    
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    /**
-     * Items filed directly under this exact category.
-     * Does NOT include items filed under a descendant category — see itemsIncludingDescendants().
-     */
+    
     public function items()
     {
         return $this->hasMany(Item::class);
@@ -66,31 +58,32 @@ class Category extends Model
         return ! $this->children()->exists();
     }
 
-    /**
-     * IDs of every category nested under this one, at any depth, NOT including this category itself.
-     *
-     * Uses a recursive CTE (WITH RECURSIVE) so the whole subtree is fetched in a single query
-     * regardless of how deep the nesting goes, rather than walking level-by-level in PHP.
-     * Requires MySQL 8+/MariaDB 10.2+/Postgres/SQLite 3.8.3+ (this app runs MySQL 8.0.46).
-     */
+      public function ancestors(): Collection
+    {
+        $chain = collect();
+        $node = $this->parent;
+
+        while ($node) {
+            $chain->prepend($node);
+            $node = $node->parent;
+        }
+
+        return $chain;
+    }
+
+    
     public function descendantIds(): Collection
     {
         return static::descendantIdsOf($this->id);
     }
 
-    /**
-     * Same as descendantIds(), plus the category's own ID.
-     * This is the ID list you filter items by: "Beverages or anything under Beverages".
-     */
+    
     public function descendantAndSelfIds(): Collection
     {
         return $this->descendantIds()->push($this->id);
     }
 
-    /**
-     * Recursive-CTE lookup of every descendant ID of a given category ID.
-     * Static so it can be reused without instantiating a model (e.g. from a route-model-bound ID).
-     */
+    
     public static function descendantIdsOf(int $categoryId): Collection
     {
         $rows = DB::select(<<<'SQL'
@@ -112,18 +105,13 @@ class Category extends Model
         return collect($rows)->pluck('id');
     }
 
-    /**
-     * All items belonging to this category OR any of its descendants at any depth.
-     * This is the "show me all Beverages items" query: category_id IN (Beverages, Cold Beverage, Hot Beverage, ...).
-     */
+    
     public function itemsIncludingDescendants()
     {
         return Item::whereIn('category_id', $this->descendantAndSelfIds());
     }
 
-    /**
-     * Root categories (no parent) with their children eager-loaded, for rendering a tree.
-     */
+    
     public static function tree()
     {
         return static::whereNull('parent_id')
@@ -132,11 +120,40 @@ class Category extends Model
             ->get();
     }
 
-    /**
-     * Self-referencing eager-load relation used by tree() to pull the whole subtree in one round trip.
-     */
+    
     public function childrenRecursive()
     {
         return $this->children()->with('childrenRecursive')->orderBy('name');
     }
+
+    public function scopesearch(Builder $query, ?string $term): Builder
+    {
+        if (! $term) {
+            return $query;
+        }
+        return $query->where('name', 'like', '%' . $term . '%');
+    } 
+
+
+    public static function treeOrderedIds(): Collection
+    {
+        $rows = DB::select(<<<'SQL'
+            WITH RECURSIVE ordered AS (
+                SELECT id, CAST(name AS CHAR(2000)) AS sort_path
+                FROM categories
+                WHERE parent_id IS NULL AND deleted_at IS NULL
+
+                UNION ALL
+
+                SELECT c.id, CONCAT(o.sort_path, CHAR(1), c.name)
+                FROM categories c
+                INNER JOIN ordered o ON c.parent_id = o.id
+                WHERE c.deleted_at IS NULL
+            )
+            SELECT id FROM ordered ORDER BY sort_path
+        SQL);
+
+        return collect($rows)->pluck('id');
+    }
+
 }

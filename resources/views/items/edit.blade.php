@@ -32,20 +32,12 @@
             <small class="form-text text-muted">Items can only be filed under the lowest-level subcategory — categories with subcategories of their own are grayed out.</small>
         </div>
         <div class="mb-3">
-            <label>Quantity</label>
-            <input type="number" step="any" name="quantity" class="form-control" value="{{ old('quantity', $item->quantity) }}" required>
-        </div>
-        <div class="mb-3">
             <label>Expiry Date</label>
             <input type="date" name="expiry_date" class="form-control" value="{{ old('expiry_date', $item->expiry_date?->format('Y-m-d')) }}">
         </div>
         <div class="mb-3">
             <label>Unit Price</label>
             <input type="number" step="any" name="unit_price" class="form-control" value="{{ old('unit_price', $item->unit_price) }}">
-        </div>
-        <div class="mb-3">
-            <label>Reorder Level</label>
-            <input type="number" step="any" name="reorder_level" class="form-control" value="{{ old('reorder_level', $item->reorder_level) }}">
         </div>
         @if ($errors->any())
             <div class="alert alert-danger">
