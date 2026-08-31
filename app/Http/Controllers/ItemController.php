@@ -191,21 +191,22 @@ class ItemController extends Controller
         return $flattened;
     }
 
-    private function validatesupplier(Request $request): array
-{
-    return $request->validate([
-        'name'=>'required|string|max:255',
-        'description'=>'nullable|string'
-        'item_id'=>[
-            'required',
-            'exists:items,id',
-            function($atrributes,value,$fail){
-                $item=item:;find($value);
-                if($item && !item-> is_active){
-                    $fail("The item\"{$item->name}\" exists but is inactive");
-                }
-              }
-        }
+    private function validateSupplier(Request $request): array
+    {
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'item_id' => [
+                'required',
+                'exists:items,id',
+                function ($attribute, $value, $fail) {
+                    $item = Item::find($value);
+
+                    if ($item && ! $item->is_active) {
+                        $fail("The item \"{$item->name}\" exists but is inactive.");
+                    }
+                },
+            ],
         ]);
-}
+    }
 }

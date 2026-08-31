@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SupplierController;
 
 Route::get('/', function () {
     return view('home');
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/items/import', [ItemController::class, 'import'])->name('items.import');
     Route::post('/items/import/undo', [ItemController::class, 'undoImport'])->name('items.import.undo');
     Route::resource('items', ItemController::class);   
+    Route::resource('suppliers', SupplierController::class);
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
    Route::post('/quick-logout', [UserController::class, 'logout'])->name('user.logout');
 
@@ -43,6 +45,7 @@ Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
 Route::post('/stock', [StockController::class, 'store'])
     ->middleware('auth')
     ->name('stock.store');
+
 
 Route::get('/branch-stock/{branchStock}/edit', [BranchStockController::class, 'edit'])->name('branch-stock.edit');
 Route::patch('/branch-stock/{branchStock}', [BranchStockController::class, 'update'])->name('branch-stock.update');
@@ -59,6 +62,7 @@ Route::middleware('role:admin')->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::resource('suppliers', SupplierController::class);
 });
 
 Route::middleware('role:branch_manager')->prefix('manager')->name('manager.')->group(function () {
