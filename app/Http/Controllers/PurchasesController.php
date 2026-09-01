@@ -20,16 +20,6 @@ class PurchasesController extends Controller
         return view('purchases.create');
     }
 
-    public function store(Request $request)
-    {
-        $validated = $this->validatePurchase($request);
-
-        purchase::create($validated);
-
-        return redirect()->route('purchase.index')
-        ->with('success', 'purchase created successfully.');
-    }
-
     public function show(Purchase $purchase)
     {
         return view('purchases.show', compact('purchase'));
@@ -57,17 +47,19 @@ class PurchasesController extends Controller
         return redirect()->route('purchases.index')->with('success', 'Purchase deleted.');
     }
 
-    private function validatePurchase(Request $request, Purchase $purchase = null)
+    public function store(Request $request)
+{
+    $validated = $this->validatePurchase($request);
+    Purchase::create($validated);
+    return redirect()->route('purchases.index')->with('success', 'Purchase created successfully.');
+}
+
+    private function validatePurchase(Request $request, ?Purchase $purchase = null): array
     {
         return $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'email' => [
-                'nullable',
-                'email',
-                'max:255',
-                Rule::unique('purchases', 'email')->ignore($purchase?->id),
-            ],
+            'email' => ['nullable', 'email', 'max:255', Rule::unique('purchases', 'email')->ignore($purchase?->id)],
             'item_id' => 'nullable|integer|exists:items,id',
         ]);
     }

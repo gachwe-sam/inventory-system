@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class purchase extends Model
+class Purchase extends Model
 {
-    use softdeletes;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',

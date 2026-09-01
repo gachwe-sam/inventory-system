@@ -2,29 +2,19 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Database\Seeders\RoleSeeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Tania',
-            'email' => 'tanias@example.com',
+        // Hardcoded test user removed — you'll create your own below.
+        // Check RoleSeeder.php / PermissionSeeder.php content before
+        // deleting them — if they're the source of "branch_manager",
+        // fold whatever's unique into RolePermissionSeeder and remove
+        // the other two calls, so roles aren't defined in three places.
+        $this->call([
+            RolePermissionSeeder::class,
         ]);
-
-        $this->call(RoleSeeder::class);
-        $this->call(PermissionSeeder::class);
-        $this->call([ RolePermissionSeeder::class, ]);
     }
 }
