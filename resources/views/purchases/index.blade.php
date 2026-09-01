@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Suppliers
+            Purchases
         </h2>
     </x-slot>
 
@@ -10,9 +10,9 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="mb-4 flex items-center justify-between">
-                        <h3 class="text-lg font-semibold">Suppliers list</h3>
-                        <a href="{{ route('suppliers.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                            Add Supplier
+                        <h3 class="text-lg font-semibold">Purchase list</h3>
+                        <a href="{{ route('purchases.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
+                            Add Purchase
                         </a>
                     </div>
 
@@ -29,21 +29,19 @@
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Item</th>
                                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
-                                @forelse ($suppliers as $supplier)
+                                @forelse ($purchases as $purchase)
                                     <tr>
-                                        <td class="px-4 py-2">{{ $supplier->id }}</td>
-                                        <td class="px-4 py-2">{{ $supplier->name }}</td>
-                                        <td class="px-4 py-2">{{ $supplier->email ?? '—' }}</td>
-                                        <td class="px-4 py-2">{{ $supplier->item?->name ?? 'N/A' }}</td>
+                                        <td class="px-4 py-2">{{ $purchase->id }}</td>
+                                        <td class="px-4 py-2">{{ $purchase->name }}</td>
+                                        <td class="px-4 py-2">{{ $purchase->email ?? '—' }}</td>
                                         <td class="px-4 py-2 space-x-2">
-                                            <a href="{{ route('suppliers.show', $supplier) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
-                                            <a href="{{ route('suppliers.edit', $supplier) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
-                                            <form action="{{ route('suppliers.destroy', $supplier) }}" method="POST" class="inline">
+                                            <a href="{{ route('purchases.show', $purchase->id) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
+                                            <a href="{{ route('purchases.edit', $purchase->id) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
+                                            <form action="{{ route('purchases.destroy', $purchase->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
@@ -52,7 +50,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="px-4 py-6 text-center text-gray-500">No suppliers yet.</td>
+                                        <td colspan="4" class="px-4 py-6 text-center text-gray-500">No purchases yet.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -60,7 +58,7 @@
                     </div>
 
                     <div class="mt-4">
-                        {{ $suppliers->links() }}
+                        {{ $purchases->links() }}
                     </div>
                 </div>
             </div>

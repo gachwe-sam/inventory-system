@@ -24,23 +24,24 @@
                     <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">
                         {{ __('Suppliers') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('purchases.index')" :active="request()->routeIs('purchases.*')">
+                        {{ __('Purchases') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('stock.index')" :active="request()->routeIs('stock.*')">
                         {{ __('Adjust Stock') }}
                     </x-nav-link>
-                    @role('branch_manager')
-                        <x-nav-link :href="route('manager.staff.index')" :active="request()->routeIs('manager.*')">
-                            {{ __('Staff Permissions') }}
+                   <x-nav-link :href="route('manager.staff.index')" :active="request()->routeIs('manager.*')">
+                        {{ __('Staff Permissions') }}
                     </x-nav-link>
-                    @endrole
 
-                    @role('admin')
+                    @auth
                         <x-nav-link :href="route('branches.index')" :active="request()->routeIs('branches.*')">
                             {{ __('Branches') }}
                         </x-nav-link>
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                             {{ __('Users') }}
                         </x-nav-link>
-                    @endrole
+                    @endauth
                 </div>
             </div>
 
@@ -105,23 +106,24 @@
             <x-responsive-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')">
                 {{ __('Suppliers') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('purchases.index')" :active="request()->routeIs('purchases.*')">
+                {{ __('Purchases') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('stock.index')" :active="request()->routeIs('stock.*')">
                 {{ __('Adjust Stock') }}
             </x-responsive-nav-link>
-            @role('branch_manager')
-               <x-responsive-nav-link :href="route('manager.staff.index')" :active="request()->routeIs('manager.*')">
-                   {{ __('Staff Permissions') }}
-                </x-responsive-nav-link>
-            @endrole
+            <x-responsive-nav-link :href="route('manager.staff.index')" :active="request()->routeIs('manager.*')">
+                {{ __('Staff Permissions') }}
+            </x-responsive-nav-link>
 
-            @role('admin')
+            @auth
                 <x-responsive-nav-link :href="route('branches.index')" :active="request()->routeIs('branches.*')">
                     {{ __('Branches') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                     {{ __('Users') }}
                 </x-responsive-nav-link>
-            @endrole
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->

@@ -2,58 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
 use Illuminate\Http\Request;
-use App\Models\Item;
-use App\Models\Branch;
-use PHPUnit\Event\Telemetry\System;
-
 
 class SupplierController extends Controller
 {
-    public function index(){
-        $suppliers = Supplier::orderBy("id","desc")->paginate(10);
-        return view("supplier.index",compact('suppliers'));
+    public function index()
+    {
+        $suppliers = Supplier::orderBy('id', 'desc')->paginate(10);
+
+        return view('supplier.index', compact('suppliers'));
     }
-    public function create(){
-      
-        return view('supplier.create',compact('supplieroptions'));
 
+    public function create()
+    {
+        return view('supplier.create');
     }
-    public function store(Request $request){
 
-        $validated=$this->validateSupplier($request);
+    public function store(Request $request)
+    {
+        $validated = $this->validateSupplier($request);
 
-        supplier::create($validated);       
-       
-        return redirect('supplier.index')->with('success','supplier created successfully');
-        
+        Supplier::create($validated);
+
+        return redirect()->route('suppliers.index')
+            ->with('success', 'Supplier created successfully.');
     }
-    public function show(Supplier $supplier){
 
-        return view('supplier.show',compact('supplier'));
-
+    public function show(Supplier $supplier)
+    {
+        return view('supplier.show', compact('supplier'));
     }
-    public function edit(Supplier $supplier){
-        
-        return view('supplier.edit',compact('supplier','id'));
-    } 
-    public function update(Request $request, $id){
-        $validated=$this->validateSupplier($request);
-       
+
+    public function edit(Supplier $supplier)
+    {
+        return view('supplier.edit', compact('supplier'));
+    }
+
+    public function update(Request $request, Supplier $supplier)
+    {
+        $validated = $this->validateSupplier($request);
+
         $supplier->update($validated);
 
         return redirect()->route('suppliers.index')
-                        ->with('success','supplier updated successfully');
+            ->with('success', 'Supplier updated successfully.');
     }
 
-    public function destroy(Supplier $supplier){
-
+    public function destroy(Supplier $supplier)
+    {
         $supplier->delete();
-        
-        return redirect('supplier.index')->with('success','supplier deleted');
-    
+
+        return redirect()->route('suppliers.index')
+            ->with('success', 'Supplier deleted.');
     }
-     private function validateSupplier(Request $request): array
+
+    private function validateSupplier(Request $request): array
     {
         return $request->validate([
             'name' => 'required|string|max:255',
@@ -61,7 +65,7 @@ class SupplierController extends Controller
             'email' => 'nullable|email|max:255',
             'item_id' => [
                 'nullable',
-                'exists:item,id',
+                'exists:items,id',
             ],
         ]);
     }
