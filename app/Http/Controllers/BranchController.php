@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Routing\Controller;
 use Illuminate\Validation\Rule;
-
 
 class BranchController extends Controller
 {

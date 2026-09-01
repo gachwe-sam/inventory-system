@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        schema::create('suppliers', function (Blueprint $table) {
+        Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('email')->nullable()-> unique();
+            $table->string('email')->nullable()->unique();
             $table->foreignId('item_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
-           
-
     }
 
     /**

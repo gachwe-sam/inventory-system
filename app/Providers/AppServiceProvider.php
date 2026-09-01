@@ -24,5 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
          Gate::before(fn ($user, $ability) => $user->hasRole('admin') ? true : null);
         Gate::policy(Branchstock::class, BranchstockPolicy::class);
+        Gate::before(function ($user,string $ability){
+            return $user->hasrole('admin') ? true : null;
+        });
     }
 }

@@ -23,15 +23,13 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request, OtpController $otp): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
-        // Password checks out, but the session isn't fully trusted until the OTP step passes.
-        $user = $request->user();
-        Auth::guard('web')->logout();
+        $request->session()->regenerate();
 
-        return $otp->issueOtp($request, $user);
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**
