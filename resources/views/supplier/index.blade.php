@@ -1,69 +1,41 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Suppliers
-        </h2>
-    </x-slot>
+@extends('layouts.adminlte')
+@section('title', 'Suppliers')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="mb-4 flex items-center justify-between">
-                        <h3 class="text-lg font-semibold">Suppliers list</h3>
-                        <a href="{{ route('suppliers.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                            Add Supplier
-                        </a>
-                    </div>
-
-                    @if (session('success'))
-                        <div class="mb-4 rounded bg-green-100 border border-green-200 px-4 py-2 text-sm text-green-700">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Item</th>
-                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                @forelse ($suppliers as $supplier)
-                                    <tr>
-                                        <td class="px-4 py-2">{{ $supplier->id }}</td>
-                                        <td class="px-4 py-2">{{ $supplier->name }}</td>
-                                        <td class="px-4 py-2">{{ $supplier->email ?? '—' }}</td>
-                                        <td class="px-4 py-2">{{ $supplier->item?->name ?? 'N/A' }}</td>
-                                        <td class="px-4 py-2 space-x-2">
-                                            <a href="{{ route('suppliers.show', $supplier) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
-                                            <a href="{{ route('suppliers.edit', $supplier) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
-                                            <form action="{{ route('suppliers.destroy', $supplier) }}" method="POST" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="px-4 py-6 text-center text-gray-500">No suppliers yet.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-4">
-                        {{ $suppliers->links() }}
-                    </div>
-                </div>
-            </div>
-        </div>
+@section('content')
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">Suppliers</h3>
+        <a href="{{ route('suppliers.create') }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg"></i> Add Supplier
+        </a>
     </div>
-</x-app-layout>
+    <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr><th>#</th><th>Name</th><th>Email</th><th>Item</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                @forelse ($suppliers as $supplier)
+                <tr>
+                    <td>@rownum($suppliers)</td>
+                    <td>{{ $supplier->name }}</td>
+                    <td>{{ $supplier->email ?? '—' }}</td>
+                    <td>{{ $supplier->item?->name ?? 'N/A' }}</td>
+                    <td>
+                        <a href="{{ route('suppliers.show', $supplier) }}" class="btn btn-sm btn-outline-secondary">View</a>
+                        <a href="{{ route('suppliers.edit', $supplier) }}" class="btn btn-sm btn-warning">Edit</a>
+                        <form action="{{ route('suppliers.destroy', $supplier) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this supplier?')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="5" class="text-center text-muted py-3">No suppliers yet.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer">{{ $suppliers->links() }}</div>
+</div>
+@endsection
