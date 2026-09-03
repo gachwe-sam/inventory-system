@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SupplierController extends Controller
 {
     public function index()
     {
         $suppliers = Supplier::orderBy('id', 'desc')->paginate(10);
-
         return view('supplier.index', compact('suppliers'));
     }
 
@@ -22,11 +22,8 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $validated = $this->validateSupplier($request);
-
         Supplier::create($validated);
-
-        return redirect()->route('suppliers.index')
-            ->with('success', 'Supplier created successfully.');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully.');
     }
 
     public function show(Supplier $supplier)
@@ -41,32 +38,29 @@ class SupplierController extends Controller
 
     public function update(Request $request, Supplier $supplier)
     {
-        $validated = $this->validateSupplier($request);
-
+        $validated = $this->validateSupplier($request, $supplier);
         $supplier->update($validated);
-
-        return redirect()->route('suppliers.index')
-            ->with('success', 'Supplier updated successfully.');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier updated successfully.');
     }
 
     public function destroy(Supplier $supplier)
     {
         $supplier->delete();
-
-        return redirect()->route('suppliers.index')
-            ->with('success', 'Supplier deleted.');
+        return redirect()->route('suppliers.index')->with('success', 'Supplier deleted.');
     }
 
-    private function validateSupplier(Request $request): array
+    private function validateSupplier(Request $request, ?Supplier $supplier = null): array
     {
         return $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'email' => 'nullable|email|max:255',
-            'item_id' => [
+            'email' => [
                 'nullable',
-                'exists:items,id',
+                'email',
+                'max:255',
+                Rule::unique('suppliers', 'email')->ignore($supplier?->id),
             ],
+            'item_id' => ['nullable', 'exists:items,id'],
         ]);
     }
 }
