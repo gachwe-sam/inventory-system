@@ -1,4 +1,45 @@
+@extends('layouts.adminlte')
+@section('title', 'Edit Purchase')
 
+@section('content')
+<div class="card">
+    <div class="card-body">
+        <form method="POST" action="{{ route('purchases.update', $purchase) }}">
+            @csrf @method('PUT')
+            <div class="mb-3">
+                <label class="form-label">Purchase Name / Reference</label>
+                <input type="text" name="name" value="{{ old('name', $purchase->name) }}" class="form-control" required>
+            </div>
+
+            <h5>Items Purchased</h5>
+            <table class="table">
+                <thead><tr><th>Item</th><th>Quantity</th><th>Unit Price</th><th></th></tr></thead>
+                <tbody id="item-rows"></tbody>
+            </table>
+            <button type="button" id="add-row" class="btn btn-sm btn-outline-primary">+ Add Item</button>
+
+            <template id="item-row-template">
+                <tr>
+                    <td>
+                        <select name="items[__INDEX__][item_id]" class="form-select" required>
+                            <option value="">-- Select item --</option>
+                            @foreach ($allItems as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td><input type="number" name="items[__INDEX__][quantity]" class="form-control" min="1" required></td>
+                    <td><input type="number" step="0.01" name="items[__INDEX__][unit_price]" class="form-control" min="0"></td>
+                    <td><button type="button" class="btn btn-sm btn-danger remove-row">&times;</button></td>
+                </tr>
+            </template>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-success">Update Purchase</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script>
     let rowIndex = 0;
