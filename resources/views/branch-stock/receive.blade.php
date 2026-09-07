@@ -1,30 +1,20 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
+@section('title', 'Receive Stock')
+
 @section('content')
-<div class="container">
-    <h2>Receive stock - {{ $stock->item->name }} @{{ $stock->branch->name }}</h2>
-    <p class="text-muted">Current balance:{{ $stock->quantity }}</p>
-    <form action="{{ route('branch-stock.receive',$stock) }}" method="POST">
+<x-ui.card>
+    <h4>{{ $stock->item->name }} @ {{ $stock->branch->name }}</h4>
+    <p class="text-muted">Current balance: {{ $stock->quantity }}</p>
+    <form action="{{ route('branch-stock.receive', $stock) }}" method="POST">
         @csrf
 
-        <div class="mb-3">
-            <label>Quantity to receive</label>
-            <input type="number" step="any" min="0.01" name="quantity" class="form-control" value="{{ old('quantity') }}" required autofocus>
-        </div>
-        <div class="mb-3">
-            <label>Notes(optional)</label>
-            <input type="text" name="notes" class="form-control" value="{{ old('notes') }}">
-        </div>
+        <x-ui.form-field name="quantity" label="Quantity to receive" type="number" step="any" min="0.01" required autofocus />
+        <x-ui.form-field name="notes" label="Notes (optional)" />
 
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            @foreach($errors->all() as $error)
-            <p>{{ $error}}</p>
-            @endforeach
-        </div>
-    @endif
-    
-    <button type="submit" class="btn btn-success">Receive</button>
-    <a href="{{ $back }}" class="btn btn-secondary">Cancel</a>
+        <x-ui.error-list :errors="$errors" />
+
+        <button type="submit" class="btn btn-success">Receive</button>
+        <a href="{{ $back }}" class="btn btn-secondary">Cancel</a>
     </form>
-</div>
+</x-ui.card>
 @endsection

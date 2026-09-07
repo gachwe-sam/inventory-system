@@ -11,12 +11,24 @@ class BranchManagerStaffController extends Controller
 {
     public function index()
     {
+        return view('manager.staff.index');
+    }
+
+    public function data(Request $request)
+    {
         $staff = User::where('branch_id', auth()->user()->branch_id)
             ->where('id', '!=', auth()->id())
             ->orderBy('name')
-            ->get();
+            ->paginate($request->integer('size', 15));
 
-        return view('manager.staff.index', compact('staff'));
+        $rows = collect($staff->items())->map(fn (User $user) => [
+            'name' => $user->name,
+            'email' => $user->email,
+            'permissions' => $user->permissions->pluck('name')->join(', ') ?: 'None',
+            'actions_html' => view('manager.staff.partials.actions', compact('user'))->render(),
+        ]);
+
+        return response()->json(['data' => $rows, 'last_page' => $staff->lastPage()]);
     }
 
     public function edit(User $user)

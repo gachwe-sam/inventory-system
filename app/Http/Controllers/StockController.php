@@ -16,6 +16,51 @@ class StockController extends Controller
 
     public function index(Request $request)
     {
+        [$branches, $branch] = $this->resolveBranch($request);
+
+        if (! $branch) {
+            return view('stock.index', [
+                'branches' => $branches,
+                'branch' => null,
+                'unstockedItems' => collect(),
+            ]);
+        }
+
+        $stockedItemIds = Branchstock::where('branch_id', $branch->id)->pluck('item_id');
+        $unstockedItems = Item::whereNotIn('id', $stockedItemIds)->orderBy('name')->get();
+
+        return view('stock.index', [
+            'branches' => $branches,
+            'branch' => $branch,
+            'unstockedItems' => $unstockedItems,
+        ]);
+    }
+
+    public function data(Request $request)
+    {
+        [, $branch] = $this->resolveBranch($request);
+
+        abort_unless($branch, 404);
+
+        $stockedItems = Branchstock::where('branch_id', $branch->id)
+            ->with('item')
+            ->paginate($request->integer('size', 15));
+
+        $rows = collect($stockedItems->items())->filter(fn ($row) => $row->item)->values()->map(fn ($row) => [
+            'item' => $row->item->name,
+            'quantity' => $row->quantity,
+            'reorder_level' => $row->reorder_level,
+            'actions_html' => view('stock.partials.stocked-actions', ['row' => $row])->render(),
+        ]);
+
+        return response()->json(['data' => $rows, 'last_page' => $stockedItems->lastPage()]);
+    }
+
+    /**
+     * @return array{0: \Illuminate\Support\Collection, 1: ?Branch}
+     */
+    private function resolveBranch(Request $request): array
+    {
         $user = auth()->user();
 
         if ($user->hasRole('admin')) {
@@ -25,30 +70,13 @@ class StockController extends Controller
                 ? $branches->firstWhere('id', (int) $request->input('branch_id'))
                 : $branches->first();
 
-            if (! $branch) {
-                return view('stock.index', [
-                    'branches' => $branches,
-                    'branch' => null,
-                    'stockedItems' => collect(),
-                    'unstockedItems' => collect(),
-                ]);
-            }
-        } else {
-            $branches = collect();
-            $branch = $user->branch;
-            abort_if(! $branch, 403, 'No branch assigned to your account.');
+            return [$branches, $branch];
         }
 
-        $stockedItems = Branchstock::where('branch_id', $branch->id)->with('item')->get();
+        $branch = $user->branch;
+        abort_if(! $branch, 403, 'No branch assigned to your account.');
 
-        $unstockedItems = Item::whereNotIn('id', $stockedItems->pluck('item_id'))->orderBy('name')->get();
-
-        return view('stock.index', [
-            'branches' => $branches,
-            'branch' => $branch,
-            'stockedItems' => $stockedItems,
-            'unstockedItems' => $unstockedItems,
-        ]);
+        return [collect(), $branch];
     }
 
     public function store(Request $request)

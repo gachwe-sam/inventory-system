@@ -10,8 +10,23 @@ class SupplierController extends Controller
 {
     public function index()
     {
-        $suppliers = Supplier::orderBy('id', 'desc')->paginate(10);
-        return view('supplier.index', compact('suppliers'));
+        return view('supplier.index');
+    }
+
+    public function data(Request $request)
+    {
+        $suppliers = Supplier::with('item')
+            ->orderBy('id', 'desc')
+            ->paginate($request->integer('size', 15));
+
+        $rows = collect($suppliers->items())->map(fn (Supplier $supplier) => [
+            'name' => $supplier->name,
+            'email' => $supplier->email ?? '—',
+            'item_name' => $supplier->item?->name ?? 'N/A',
+            'actions_html' => view('supplier.partials.actions', compact('supplier'))->render(),
+        ]);
+
+        return response()->json(['data' => $rows, 'last_page' => $suppliers->lastPage()]);
     }
 
     public function create()

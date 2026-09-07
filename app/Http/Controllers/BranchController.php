@@ -11,31 +11,47 @@ class BranchController extends Controller
 {
 
     public function index(Request $request)
-{
-    $orderedIds = Branch::treeOrderedIds();
+    {
+        $branchOptions = $this->parentOptions();
 
-    $matching = Branch::with('parent')
-        ->search($request->input('search'))
-        ->whereIn('id', $orderedIds)
-        ->get()
-        ->sortBy(fn ($branch) => $orderedIds->search($branch->id))
-        ->values();
+        return view('branches.index', compact('branchOptions'));
+    }
 
-    $perPage = 14;
-    $page = $request->integer('page', 1);
+    public function data(Request $request)
+    {
+        $branches = $this->paginatedBranches($request, $request->integer('size', 15));
 
-    $branches = new LengthAwarePaginator(
-        $matching->forPage($page, $perPage)->values(),
-        $matching->count(),
-        $perPage,
-        $page,
-        ['path' => $request->url(), 'query' => $request->query()]
-    );
+        $rows = collect($branches->items())->map(fn (Branch $branch) => [
+            'name_html' => ($branch->parent ? e($branch->parent->name) . ' &gt; ' : '')
+                . '<a href="' . route('branches.show', $branch) . '">' . e($branch->name) . '</a>',
+            'items_count' => $branch->stock()->count(),
+            'actions_html' => view('branches.partials.actions', compact('branch'))->render(),
+        ]);
 
-    $branchOptions = $this->parentOptions();
+        return response()->json(['data' => $rows, 'last_page' => $branches->lastPage()]);
+    }
 
-    return view('branches.index', compact('branches', 'branchOptions'));
-}
+    private function paginatedBranches(Request $request, int $perPage): LengthAwarePaginator
+    {
+        $orderedIds = Branch::treeOrderedIds();
+
+        $matching = Branch::with('parent')
+            ->search($request->input('search'))
+            ->whereIn('id', $orderedIds)
+            ->get()
+            ->sortBy(fn ($branch) => $orderedIds->search($branch->id))
+            ->values();
+
+        $page = $request->integer('page', 1);
+
+        return new LengthAwarePaginator(
+            $matching->forPage($page, $perPage)->values(),
+            $matching->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+    }
 
     public function create()
     {

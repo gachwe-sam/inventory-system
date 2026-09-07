@@ -1,9 +1,9 @@
-
-@extends('layouts.app')
+@extends('layouts.adminlte')
+@section('title', 'Edit Permissions')
 
 @section('content')
-<div class="container">
-    <h2>Edit Permissions — {{ $user->name }}</h2>
+<x-ui.card>
+    <h4>{{ $user->name }}</h4>
 
     <form action="{{ route('manager.staff.update', $user) }}" method="POST">
         @csrf @method('PATCH')
@@ -19,16 +19,10 @@
             @endforeach
         </div>
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
+        <x-ui.error-list :errors="$errors" />
 
         <button type="submit" class="btn btn-success">Update</button>
         <a href="{{ route('manager.staff.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
-</div>
+</x-ui.card>
 @endsection

@@ -1,47 +1,26 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Dashboard
-        </h2>
-    </x-slot>
+@extends('layouts.adminlte')
+@section('title', 'Dashboard')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                        <a href="{{ route('categories.index') }}" class="block rounded-lg border border-gray-200 p-4 hover:bg-gray-50">
-                            <div class="text-sm text-gray-500">Categories</div>
-                            <div class="mt-2 text-xl font-semibold">Categories</div>
-                        </a>
-
-                        <a href="{{ route('items.index') }}" class="block rounded-lg border border-gray-200 p-4 hover:bg-gray-50">
-                            <div class="text-sm text-gray-500">Items</div>
-                            <div class="mt-2 text-xl font-semibold">Items</div>
-                        </a>
-
-                        <a href="{{ route('suppliers.index') }}" class="block rounded-lg border border-gray-200 p-4 hover:bg-gray-50">
-                            <div class="text-sm text-gray-500">Suppliers</div>
-                            <div class="mt-2 text-xl font-semibold">Suppliers</div>
-                        </a>
-
-                        <a href="{{ route('purchases.index') }}" class="block rounded-lg border border-gray-200 p-4 hover:bg-gray-50">
-                            <div class="text-sm text-gray-500">Purchases</div>
-                            <div class="mt-2 text-xl font-semibold">Purchases</div>
-                        </a>
-
-                        <a href="{{ route('branches.index') }}" class="block rounded-lg border border-gray-200 p-4 hover:bg-gray-50">
-                            <div class="text-sm text-gray-500">Branches</div>
-                            <div class="mt-2 text-xl font-semibold">Branches</div>
-                        </a>
-
-                        <a href="{{ route('stock.index') }}" class="block rounded-lg border border-gray-200 p-4 hover:bg-gray-50">
-                            <div class="text-sm text-gray-500">Branch stock</div>
-                            <div class="mt-2 text-xl font-semibold">Branch Stock</div>
-                        </a>
+@section('content')
+<div class="row g-3">
+    @foreach ([
+        ['label' => 'Categories', 'route' => 'categories.index', 'icon' => 'bi-diagram-3'],
+        ['label' => 'Items', 'route' => 'items.index', 'icon' => 'bi-box-seam'],
+        ['label' => 'Suppliers', 'route' => 'suppliers.index', 'icon' => 'bi-truck'],
+        ['label' => 'Purchases', 'route' => 'purchases.index', 'icon' => 'bi-cart'],
+        ['label' => 'Branches', 'route' => 'branches.index', 'icon' => 'bi-diagram-2'],
+        ['label' => 'Branch Stock', 'route' => 'stock.index', 'icon' => 'bi-clipboard-data'],
+    ] as $tile)
+        <div class="col-md-6 col-xl-4">
+            <a href="{{ route($tile['route']) }}" class="text-decoration-none">
+                <div class="card h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <i class="bi {{ $tile['icon'] }} fs-2 text-primary"></i>
+                        <span class="fs-5 text-body">{{ $tile['label'] }}</span>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
-    </div>
-</x-app-layout>
+    @endforeach
+</div>
+@endsection

@@ -1,30 +1,18 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
+@section('title', 'Add Branch')
 
 @section('content')
-<div class="container">
-    <h2>Add Branch</h2>
+<x-ui.card>
     <form action="{{ route('branches.store') }}" method="POST">
         @csrf
+        <x-ui.form-field name="name" label="Name" required />
+        <x-ui.form-field name="location" label="Location" />
+        <x-ui.form-field name="address" label="Address" />
+        <x-ui.form-field name="phone" label="Phone" />
+
         <div class="mb-3">
-            <label>Name</label>
-            <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
-        </div>
-        <div class="mb-3">
-            <label>Location</label>
-            <input type="text" name="location" class="form-control" value="{{ old('location') }}">
-        </div>
-        <div class="mb-3">
-            <label>Address</label>
-            <input type="text" name="address" class="form-control" value="{{ old('address') }}">
-        </div>
-        <div class="mb-3">
-            <label>Phone</label>
-            <input type="text" name="phone" class="form-control" value="{{ old('phone') }}">
-        </div>
-        
-        <div class="mb-3">
-            <label>Parent Branch</label>
-            <select name="parent_id" class="form-control">
+            <label class="form-label">Parent Branch</label>
+            <select name="parent_id" class="form-select">
                 <option value="">-- None (top-level Branch) --</option>
                 @foreach($parentOptions as $option)
                     <option value="{{ $option->id }}" {{ (string) old('parent_id', request('parent_id')) === (string) $option->id ? 'selected' : '' }}>
@@ -34,14 +22,10 @@
             </select>
             <small class="form-text text-muted">Leave blank for a top-level Branch.</small>
         </div>
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
+
+        <x-ui.error-list :errors="$errors" />
+
         <button type="submit" class="btn btn-success">Save</button>
     </form>
-</div>
+</x-ui.card>
 @endsection
