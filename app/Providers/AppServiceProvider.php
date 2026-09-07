@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\Branchstock;
 use App\Policies\BranchstockPolicy;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -26,15 +25,6 @@ class AppServiceProvider extends ServiceProvider
         // Fix #1: Paginator is a CLASS, called statically — no parentheses
         // after the class name, no lowercase "paginator()" helper exists.
         Paginator::useBootstrapFive();
-
-        // Fix #2: {$expression} interpolates the RAW CODE TEXT typed inside
-        // @rownum(...) — e.g. "$suppliers" — into real, callable PHP.
-        // currentPage() and perPage() are actual methods every Laravel
-        // paginator object has; $loop->iteration is Blade's automatic
-        // built-in counter, available inside any @foreach with no setup.
-        Blade::directive('rownum', function ($expression) {
-            return "<?php echo ({$expression}->currentPage() - 1) * {$expression}->perPage() + \$loop->iteration; ?>";
-        });
 
         // Feeds the sidebar menu to layouts.adminlte automatically —
         // every page using that layout gets $menu without a controller

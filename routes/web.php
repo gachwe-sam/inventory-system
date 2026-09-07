@@ -32,19 +32,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/categories/export/{format}', [CategoryController::class, 'exportExcel'])->whereIn('format', ['xlsx', 'csv'])->name('categories.export');
     Route::post('/categories/import', [CategoryController::class, 'import'])->name('categories.import');
     Route::post('/categories/import/undo', [CategoryController::class, 'undoImport'])->name('categories.import.undo');
+    Route::get('/categories/data', [CategoryController::class, 'data'])->name('categories.data');
     Route::resource('categories', CategoryController::class);
 
     Route::get('/items/export/pdf', [ItemController::class, 'exportPdf'])->name('items.export.pdf');
     Route::get('/items/export/{format}', [ItemController::class, 'exportExcel'])->whereIn('format', ['xlsx', 'csv'])->name('items.export');
     Route::post('/items/import', [ItemController::class, 'import'])->name('items.import');
     Route::post('/items/import/undo', [ItemController::class, 'undoImport'])->name('items.import.undo');
+    Route::get('/items/data', [ItemController::class, 'data'])->name('items.data');
     Route::resource('items', ItemController::class);
 
+    Route::get('/branches/data', [BranchController::class, 'data'])->name('branches.data');
     Route::resource('branches', BranchController::class);
+    Route::get('/suppliers/data', [SupplierController::class, 'data'])->name('suppliers.data');
     Route::resource('suppliers', SupplierController::class);
+    Route::get('/purchases/data', [PurchasesController::class, 'data'])->name('purchases.data');
     Route::resource('purchases', PurchasesController::class);
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
 
@@ -52,6 +58,7 @@ Route::middleware('auth')->group(function () {
     // BranchstockPolicy, not a role/page lock, so it's a different
     // concern from the "open everything up" change above.
     Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
+    Route::get('/stock/data', [StockController::class, 'data'])->name('stock.data');
     Route::post('/stock', [StockController::class, 'store'])->name('stock.store');
     Route::get('/branch-stock/{branchStock}/edit', [BranchStockController::class, 'edit'])->name('branch-stock.edit');
     Route::patch('/branch-stock/{branchStock}', [BranchStockController::class, 'update'])->name('branch-stock.update');
@@ -65,6 +72,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('manager')->name('manager.')->group(function () {
         Route::get('/staff', [BranchManagerStaffController::class, 'index'])->name('staff.index');
+        Route::get('/staff/data', [BranchManagerStaffController::class, 'data'])->name('staff.data');
         Route::get('/staff/{user}/edit', [BranchManagerStaffController::class, 'edit'])->name('staff.edit');
         Route::patch('/staff/{user}', [BranchManagerStaffController::class, 'update'])->name('staff.update');
     });

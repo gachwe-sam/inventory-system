@@ -1,27 +1,33 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
+@section('title', $purchase->name)
 
 @section('content')
-<div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('purchases.index') }}">Purchases</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $purchase->name }}</li>
-        </ol>
-    </nav>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ route('purchases.index') }}">Purchases</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ $purchase->name }}</li>
+    </ol>
+</nav>
 
-    <h2>{{ $purchase->name }}</h2>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <table class="table">
-        <tr><th>Description</th><td>{{ $purchase->description ?? '—' }}</td></tr>
-        <tr><th>Email</th><td>{{ $purchase->email ?? '—' }}</td></tr>
-        <tr><th>Item</th><td>{{ $purchase->item?->name ?? '—' }}</td></tr>
-    </table>
-
-    <a href="{{ route('purchases.edit', $purchase) }}" class="btn btn-sm btn-warning">Edit</a>
-    <a href="{{ route('purchases.index') }}" class="btn btn-secondary">Back to Purchases</a>
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+            <thead><tr><th>Item</th><th>Quantity</th><th>Unit Price</th></tr></thead>
+            <tbody>
+                @forelse ($purchase->items as $item)
+                    <tr>
+                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->pivot->quantity }}</td>
+                        <td>{{ $item->pivot->unit_price !== null ? number_format($item->pivot->unit_price, 2) : '—' }}</td>
+                    </tr>
+                @empty
+                    <tr><td colspan="3" class="text-center text-muted py-3">No items recorded.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<a href="{{ route('purchases.edit', $purchase) }}" class="btn btn-sm btn-warning mt-3">Edit</a>
+<a href="{{ route('purchases.index') }}" class="btn btn-secondary mt-3">Back to Purchases</a>
 @endsection

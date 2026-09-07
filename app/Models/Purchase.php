@@ -13,10 +13,11 @@ class Purchase extends Model
         'name',
         'description',
         'email',
-        'item_id',
     ];
-    public function item()
+    public function items()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsToMany(Item::class)
+            ->withPivot(['quantity', 'unit_price'])
+            ->withTimestamps();
     }
 }

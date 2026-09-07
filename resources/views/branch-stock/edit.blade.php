@@ -1,27 +1,19 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
+@section('title', 'Reorder Level')
 
 @section('content')
-<div class="container">
-    <h2>Reorder level— {{ $stock->item->name }} @ {{ $stock->branch->name }}</h2>
+<x-ui.card>
+    <h4>{{ $stock->item->name }} @ {{ $stock->branch->name }}</h4>
 
     <form action="{{ route('branch-stock.update', $stock) }}" method="POST">
         @csrf @method('PATCH')
 
-        <div class="mb-3">
-            <label>Reorder Level</label>
-            <input type="number" step="any" min="0" name="reorder_level" class="form-control" value="{{ old('reorder_level', $stock->reorder_level) }}" required>
-        </div>
+        <x-ui.form-field name="reorder_level" label="Reorder Level" type="number" step="any" min="0" :value="old('reorder_level', $stock->reorder_level)" required />
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
+        <x-ui.error-list :errors="$errors" />
 
         <button type="submit" class="btn btn-success">Update</button>
         <a href="{{ $back }}" class="btn btn-secondary">Cancel</a>
     </form>
-</div>
+</x-ui.card>
 @endsection

@@ -1,15 +1,14 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
+@section('title', 'Edit User — ' . $user->name)
 
 @section('content')
-<div class="container">
-    <h2>Edit User — {{ $user->name }}</h2>
-
+<x-ui.card>
     <form action="{{ route('users.update', $user) }}" method="POST">
         @csrf @method('PATCH')
 
         <div class="mb-3">
-            <label>Branch</label>
-            <select name="branch_id" class="form-control">
+            <label class="form-label">Branch</label>
+            <select name="branch_id" class="form-select">
                 <option value="">-- None (Head Office / Admin) --</option>
                 @foreach($branches as $branch)
                     <option value="{{ $branch->id }}" {{ (string) old('branch_id', $user->branch_id) === (string) $branch->id ? 'selected' : '' }}>
@@ -21,9 +20,9 @@
         </div>
 
         <div class="mb-3">
-            <label>Role</label>
+            <label class="form-label">Role</label>
             @php $currentRole = old('role', $user->roles->first()?->name); @endphp
-            <select name="role" class="form-control" required>
+            <select name="role" class="form-select" required>
                 <option value="">-- Select Role --</option>
                 @foreach($roles as $role)
                     <option value="{{ $role->name }}" {{ $currentRole === $role->name ? 'selected' : '' }}>
@@ -32,28 +31,22 @@
                 @endforeach
             </select>
         </div>
+
         <div class="mb-3">
-            <label>Stock Permissions</label>
-                @php $currentPermissions = old('permissions', $user->permissions->pluck('name')->toArray()); @endphp
-                @foreach($permissions as $permission)
-                    <div class="form-check">
-                        <input type="checkbox" name="permissions[]" value="{{ $permission }}" class="form-check-input" id="perm-{{ $permission }}"
-                            {{ in_array($permission, $currentPermissions) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="perm-{{ $permission }}">{{ $permission }}</label>
-                    </div>
-                @endforeach
+            <label class="form-label">Stock Permissions</label>
+            @php $currentPermissions = old('permissions', $user->permissions->pluck('name')->toArray()); @endphp
+            @foreach($permissions as $permission)
+                <div class="form-check">
+                    <input type="checkbox" name="permissions[]" value="{{ $permission }}" class="form-check-input" id="perm-{{ $permission }}"
+                        {{ in_array($permission, $currentPermissions) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="perm-{{ $permission }}">{{ $permission }}</label>
+                </div>
+            @endforeach
         </div>
 
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
+        <x-ui.error-list :errors="$errors" />
 
         <button type="submit" class="btn btn-success">Update</button>
     </form>
-</div>
+</x-ui.card>
 @endsection

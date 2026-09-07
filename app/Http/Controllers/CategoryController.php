@@ -13,31 +13,48 @@ use Maatwebsite\Excel\Facades\Excel;
 class CategoryController extends Controller
 {
     public function index(Request $request)
-{
-    $orderedIds = Category::treeOrderedIds();
+    {
+        $categories = $this->paginatedCategories($request, 14);
+        $categoryOptions = $this->parentOptions();
 
-    $matching = Category::with('parent')
-        ->search($request->input('search'))
-        ->whereIn('id', $orderedIds)
-        ->get()
-        ->sortBy(fn ($category) => $orderedIds->search($category->id))
-        ->values();
+        return view('categories.index', compact('categories', 'categoryOptions'));
+    }
 
-    $perPage = 14;
-    $page = $request->integer('page', 1);
+    public function data(Request $request)
+    {
+        $categories = $this->paginatedCategories($request, $request->integer('size', 15));
 
-    $categories = new LengthAwarePaginator(
-        $matching->forPage($page, $perPage)->values(),
-        $matching->count(),
-        $perPage,
-        $page,
-        ['path' => $request->url(), 'query' => $request->query()]
-    );
+        $rows = collect($categories->items())->map(fn (Category $category) => [
+            'name_html' => ($category->parent ? e($category->parent->name) . ' &gt; ' : '')
+                . '<a href="' . route('categories.show', $category) . '">' . e($category->name) . '</a>',
+            'items_count' => $category->items()->count(),
+            'actions_html' => view('categories.partials.actions', compact('category'))->render(),
+        ]);
 
-    $categoryOptions = $this->parentOptions();
+        return response()->json(['data' => $rows, 'last_page' => $categories->lastPage()]);
+    }
 
-    return view('categories.index', compact('categories', 'categoryOptions'));
-}
+    private function paginatedCategories(Request $request, int $perPage): LengthAwarePaginator
+    {
+        $orderedIds = Category::treeOrderedIds();
+
+        $matching = Category::with('parent')
+            ->search($request->input('search'))
+            ->whereIn('id', $orderedIds)
+            ->get()
+            ->sortBy(fn ($category) => $orderedIds->search($category->id))
+            ->values();
+
+        $page = $request->integer('page', 1);
+
+        return new LengthAwarePaginator(
+            $matching->forPage($page, $perPage)->values(),
+            $matching->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+    }
 
     public function create()
     {

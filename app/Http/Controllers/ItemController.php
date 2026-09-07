@@ -15,13 +15,29 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        $items = $this->filteredItems($request)
-            ->paginate(6)
-            ->withQueryString();
-
         $categoryOptions = $this->categoryOptions();
 
-        return view('items.index', compact('items', 'categoryOptions'));
+        return view('items.index', compact('categoryOptions'));
+    }
+
+    public function data(Request $request)
+    {
+        $items = $this->filteredItems($request)
+            ->paginate($request->integer('size', 15));
+
+        $rows = collect($items->items())->map(fn (Item $item) => [
+            'name' => $item->name,
+            'description' => $item->description,
+            'category' => $item->category
+                ? ($item->category->parent ? $item->category->parent->name . ' > ' : '') . $item->category->name
+                : 'N/A',
+            'total_stock' => $item->totalQuantity(),
+            'expiry_date' => $item->expiry_date?->format('Y-m-d'),
+            'unit_price' => $item->unit_price,
+            'actions_html' => view('items.partials.actions', compact('item'))->render(),
+        ]);
+
+        return response()->json(['data' => $rows, 'last_page' => $items->lastPage()]);
     }
         public function show(Item $item)
     {

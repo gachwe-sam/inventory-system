@@ -1,29 +1,18 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
+@section('title', 'Edit Branch')
 
 @section('content')
-<div class="container">
-    <h2>Edit branch</h2>
+<x-ui.card>
     <form action="{{ route('branches.update', $branch) }}" method="POST">
         @csrf @method('PUT')
+        <x-ui.form-field name="name" label="Name" :value="old('name', $branch->name)" required />
+        <x-ui.form-field name="location" label="Location" :value="old('location', $branch->location)" />
+        <x-ui.form-field name="address" label="Address" :value="old('address', $branch->address)" />
+        <x-ui.form-field name="phone" label="Phone" :value="old('phone', $branch->phone)" />
+
         <div class="mb-3">
-            <label>Name</label>
-            <input type="text" name="name" class="form-control" value="{{ old('name', $branch->name) }}" required>
-        </div>
-        <div class="mb-3">
-            <label>Location</label>
-            <input type="text" name="location" class="form-control" value="{{ old('location', $branch->location) }}">
-        </div>
-        <div class="mb-3">
-            <label>Address</label>
-            <input type="text" name="address" class="form-control" value="{{ old('address', $branch->address) }}">
-        </div>
-        <div class="mb-3">
-            <label>Phone</label>
-            <input type="text" name="phone" class="form-control" value="{{ old('phone', $branch->phone) }}">
-        </div>
-        <div class="mb-3">
-            <label>Parent branch</label>
-            <select name="parent_id" class="form-control">
+            <label class="form-label">Parent Branch</label>
+            <select name="parent_id" class="form-select">
                 <option value="">-- None (top-level branch) --</option>
                 @foreach($parentOptions as $option)
                     <option value="{{ $option->id }}" {{ (string) old('parent_id', $branch->parent_id) === (string) $option->id ? 'selected' : '' }}>
@@ -33,14 +22,10 @@
             </select>
             <small class="form-text text-muted">A branch can't be moved under itself or one of its own subbranches.</small>
         </div>
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
+
+        <x-ui.error-list :errors="$errors" />
+
         <button type="submit" class="btn btn-success">Update</button>
     </form>
-</div>
+</x-ui.card>
 @endsection

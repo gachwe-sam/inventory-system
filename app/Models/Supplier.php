@@ -20,10 +20,5 @@ class Supplier extends Model
     {
         return $this->belongsTo(Item::class);
     }
-
-    public function purchase()
-{
-    return $this->hasMany(PurchaseOrder::class);   // PurchaseOrder doesn't exist anywhere in your app
-}
 }
 

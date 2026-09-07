@@ -1,33 +1,21 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
+@section('title', 'Issue Stock')
 
 @section('content')
-<div class="container">
-    <h2>Issue Stock — {{ $stock->item->name }} @ {{ $stock->branch->name }}</h2>
+<x-ui.card>
+    <h4>{{ $stock->item->name }} @ {{ $stock->branch->name }}</h4>
     <p class="text-muted">Current balance: {{ $stock->quantity }}</p>
 
     <form action="{{ route('branch-stock.issue', $stock) }}" method="POST">
         @csrf
 
-        <div class="mb-3">
-            <label>Quantity to issue</label>
-            <input type="number" step="any" min="0.01" name="quantity" class="form-control" value="{{ old('quantity') }}" required autofocus>
-        </div>
+        <x-ui.form-field name="quantity" label="Quantity to issue" type="number" step="any" min="0.01" required autofocus />
+        <x-ui.form-field name="notes" label="Notes (optional)" />
 
-        <div class="mb-3">
-            <label>Notes (optional)</label>
-            <input type="text" name="notes" class="form-control" value="{{ old('notes') }}">
-        </div>
-
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
+        <x-ui.error-list :errors="$errors" />
 
         <button type="submit" class="btn btn-warning">Issue</button>
         <a href="{{ $back }}" class="btn btn-secondary">Cancel</a>
     </form>
-</div>
+</x-ui.card>
 @endsection

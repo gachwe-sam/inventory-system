@@ -1,22 +1,21 @@
-@extends('layouts.app')
+@extends('layouts.adminlte')
+@section('title', 'Add Item')
 
 @section('content')
-<div class="container">
-    <h2>Add Item</h2>
+<x-ui.card>
     <form action="{{ route('items.store') }}" method="POST">
         @csrf
+        <x-ui.form-field name="name" label="Name" required />
+
         <div class="mb-3">
-            <label>Name</label>
-            <input type="text" name="name" class="form-control" required>
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control">{{ old('description') }}</textarea>
         </div>
+
         <div class="mb-3">
-            <label>Description</label>
-            <textarea name="description" class="form-control"></textarea>
-        </div>
-        <div class="mb-3">
-            <label>Category</label>
+            <label class="form-label">Category</label>
             @php $selectedCategoryId = old('category_id'); @endphp
-            <select name="category_id" class="form-control" required>
+            <select name="category_id" class="form-select" required>
                 <option value="">-- Select Category --</option>
                 @foreach($categoryOptions as $option)
                     @php $isSelected = (string) $selectedCategoryId === (string) $option['id']; @endphp
@@ -31,22 +30,13 @@
             </select>
             <small class="form-text text-muted">Items can only be filed under the lowest-level subcategory — categories with subcategories of their own are grayed out.</small>
         </div>
-        <div class="mb-3">
-            <label>Expiry Date</label>
-            <input type="date" name="expiry_date" class="form-control" value="{{ old('expiry_date') }}">
-        </div>
-        <div class="mb-3">
-            <label>Unit Price</label>
-            <input type="number" step="any" name="unit_price" class="form-control" value="{{ old('unit_price') }}">
-        </div>
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
+
+        <x-ui.form-field name="expiry_date" label="Expiry Date" type="date" />
+        <x-ui.form-field name="unit_price" label="Unit Price" type="number" step="any" />
+
+        <x-ui.error-list :errors="$errors" />
+
         <button type="submit" class="btn btn-success">Save</button>
     </form>
-</div>
+</x-ui.card>
 @endsection

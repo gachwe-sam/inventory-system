@@ -47,24 +47,30 @@ class Item extends Model
         });
     }
     // app/Models/Item.php
-public function scopeInCategory(Builder $query, ?int $categoryId): Builder
-{
-    if (! $categoryId) {
-        return $query;
+    public function scopeInCategory(Builder $query, ?int $categoryId): Builder
+    {
+        if (! $categoryId) {
+            return $query;
+        }
+
+        $category = Category::find($categoryId);
+
+        return $category
+            ? $query->whereIn('category_id', $category->descendantAndSelfIds())
+            : $query;
     }
-
-    $category = Category::find($categoryId);
-
-    return $category
-        ? $query->whereIn('category_id', $category->descendantAndSelfIds())
-        : $query;
-}
-// app/Models/Item.php
-public function scopeLowStock(Builder $query, bool $only): Builder
-{
-    return $only
-        ? $query->whereHas('stock', fn ($q) => $q->whereColumn('quantity', '<=', 'reorder_level'))
-        : $query;
-}
-
+    // app/Models/Item.php
+    public function scopeLowStock(Builder $query, bool $only): Builder
+    {
+        return $only
+            ? $query->whereHas('stock', fn ($q) => $q->whereColumn('quantity', '<=', 'reorder_level'))
+            : $query;
+    }
+    public function purchases()
+    {
+        return $this->belongsToMany(Purchase::class)
+            ->withPivot(['quantity', 'unit_price'])
+            ->withTimestamps();
+    }
+    
 }
