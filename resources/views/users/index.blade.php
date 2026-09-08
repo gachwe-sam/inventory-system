@@ -1,5 +1,5 @@
 @extends('layouts.adminlte')
-@section('title', 'Users')
+
 
 @section('content')
 <x-ui.page-header title="Users" />

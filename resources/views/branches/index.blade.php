@@ -1,5 +1,5 @@
 @extends('layouts.adminlte')
-@section('title', 'Branches')
+
 
 @section('content')
 <x-ui.page-header title="Branches" actionLabel="Add Branch" :actionRoute="route('branches.create')" />

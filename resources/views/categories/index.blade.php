@@ -1,5 +1,5 @@
 @extends('layouts.adminlte')
-@section('title', 'Categories')
+
 
 @section('content')
 <x-ui.page-header title="Categories" actionLabel="Add Category" :actionRoute="route('categories.create')" />

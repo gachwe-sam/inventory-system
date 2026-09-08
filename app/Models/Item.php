@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Maatwebsite\Excel\Facdes\Excel;
+use App\Imports\ItemsImport;
 
 class Item extends Model
 {

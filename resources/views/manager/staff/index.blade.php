@@ -1,5 +1,5 @@
 @extends('layouts.adminlte')
-@section('title', 'My Branch Staff')
+
 
 @section('content')
 <x-ui.page-header title="My Branch Staff" />
