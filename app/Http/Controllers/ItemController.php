@@ -103,6 +103,12 @@ class ItemController extends Controller
             ->with('import_skipped', $import->skipped);
     }
 
+    public function downloadImportTemplate()
+{
+    return Excel::download(new \App\Exports\ItemsImportTemplateExport(), 'items-import-template.xlsx');
+}
+
+
    
     public function undoImport(Request $request)
     {

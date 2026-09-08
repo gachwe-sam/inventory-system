@@ -64,7 +64,19 @@ class ItemsImport implements ToCollection, WithHeadingRow
         }
     }
 
-    
+    public function headings(): array
+    {
+        return [
+            'name',
+            'description',
+            'category',
+            'expiry_date',
+            'unit_price',
+            'quantity',
+            'reorder_level',
+        ];
+    }
+
     private function resolveCategory(?string $breadcrumb): ?Category
     {
         if (! $breadcrumb) {

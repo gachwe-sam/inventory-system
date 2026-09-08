@@ -1,5 +1,4 @@
 @extends('layouts.adminlte')
-@section('title', 'Items')
 
 @section('content')
 <x-ui.page-header title="Items" actionLabel="Add Item" :actionRoute="route('items.create')">
@@ -21,21 +20,7 @@
     </div>
 @endif
 
-<x-ui.card title="Import Items">
-    <form method="POST" action="{{ route('items.import') }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-center flex-wrap">
-        @csrf
-        <input type="file" name="spreadsheet" accept=".xlsx,.csv" class="form-control" style="max-width: 320px;" required>
-        <button type="submit" class="btn btn-outline-primary">Import</button>
-        <small class="text-muted">Columns: Name, Description, Category (e.g. "Fertilizer &gt; CAN &gt; 25 KG BAG"), Quantity, Expiry Date, Unit Price, Reorder Level</small>
-    </form>
 
-    @if(session()->has('last_import_ids'))
-        <form id="undoImportForm" method="POST" action="{{ route('items.import.undo') }}" class="mt-2" onsubmit="return confirm('Remove the items from the last import?')">
-            @csrf
-            <button type="submit" class="btn btn-sm btn-outline-danger">Undo Last Import</button>
-        </form>
-    @endif
-</x-ui.card>
 
 <form method="GET" action="{{ route('items.index') }}" class="row g-2 my-3">
     <div class="col-auto">
@@ -58,6 +43,7 @@
         <label class="form-check-label" for="lowStock">Low stock only</label>
     </div>
     <div class="col-auto">
+        <i class="fa-solid fa-filter">Filter</i>
         <button type="submit" class="btn btn-primary">Filter</button>
     </div>
 </form>

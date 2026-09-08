@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/items/export/pdf', [ItemController::class, 'exportPdf'])->name('items.export.pdf');
     Route::get('/items/export/{format}', [ItemController::class, 'exportExcel'])->whereIn('format', ['xlsx', 'csv'])->name('items.export');
     Route::post('/items/import', [ItemController::class, 'import'])->name('items.import');
+    Route::get('/items/import/template', [ItemController::class, 'downloadImportTemplate'])->name('items.import.template');
     Route::post('/items/import/undo', [ItemController::class, 'undoImport'])->name('items.import.undo');
     Route::get('/items/data', [ItemController::class, 'data'])->name('items.data');
     Route::resource('items', ItemController::class);
