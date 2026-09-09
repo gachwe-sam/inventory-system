@@ -3,6 +3,7 @@
 
 @section('content')
 <x-ui.page-header title="Suppliers" actionLabel="Add Supplier" :actionRoute="route('suppliers.create')" />
+<x-ui.search-bar name="search" :value="request('search')" placeholder="Search name or description" />
 
 <x-ui.data-table
     :ajax-url="route('suppliers.data')"

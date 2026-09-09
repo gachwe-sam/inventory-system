@@ -21,39 +21,15 @@
     <a href="{{ route('categories.export.pdf', array_merge(request()->query(), ['format' => 'pdf'])) }}" class="btn btn-outline-secondary">Export PDF</a>
 </div>
 
-<x-ui.card title="Import Categories">
-    <form method="POST" action="{{ route('categories.import') }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-center flex-wrap">
-        @csrf
-        <input type="file" name="spreadsheet" accept=".xlsx,.csv" class="form-control" style="max-width: 320px;" required>
-        <button type="submit" class="btn btn-outline-primary">Import</button>
-        <small class="text-muted">Column: Path (e.g. "Fertilizer &gt; CAN &gt; 25 KG BAG") &mdash; one row per category, missing segments are created automatically.</small>
-    </form>
 
-    @if(session()->has('last_category_import_ids'))
-        <form method="POST" action="{{ route('categories.import.undo') }}" class="mt-2" onsubmit="return confirm('Remove the categories created by the last import?')">
-            @csrf
-            <button type="submit" class="btn btn-sm btn-outline-danger">Undo Last Import</button>
-        </form>
-    @endif
-</x-ui.card>
 
 <form method="GET" action="{{ route('categories.index') }}" class="row g-2 my-3">
+    <x-ui.search-bar name="search" :value="request('search')" placeholder="Search name or description" />
+    
     <div class="col-auto">
-        <input type="text" name="search" value="{{ request('search') }}"
-               class="form-control" placeholder="Search name or description">
-    </div>
-    <div class="col-auto">
-        <select name="category_id" class="form-select">
-            <option value="">All categories</option>
-            @foreach($categoryOptions as $option)
-                <option value="{{ $option['id'] }}" {{ (int) request('category_id') === $option['id'] ? 'selected' : '' }}>
-                    {{ $option['label'] }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-primary">Filter</button>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-funnel"></i>Filter
+        </button>
     </div>
 </form>
 

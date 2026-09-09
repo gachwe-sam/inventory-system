@@ -20,5 +20,14 @@ class Supplier extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function scopesearch(Builder $query, ?string $term): Builder
+    {
+        if (! $term) {
+            return $query;
+        }
+        return $query->where('name', 'like', '%' . $term . '%');
+    } 
+
 }
 

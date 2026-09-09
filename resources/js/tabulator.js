@@ -4,7 +4,7 @@ import 'tabulator-tables/dist/css/tabulator_bootstrap5.min.css';
 function initDataTable(el) {
     const columns = JSON.parse(el.dataset.columns);
 
-    new Tabulator(el, {
+    el.tabulator = new Tabulator(el, {
         ajaxURL: el.dataset.ajaxUrl,
         pagination: true,
         paginationMode: 'remote',
@@ -16,6 +16,7 @@ function initDataTable(el) {
         columns,
     });
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-tabulator]').forEach(initDataTable);
