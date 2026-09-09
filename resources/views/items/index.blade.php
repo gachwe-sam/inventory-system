@@ -3,9 +3,9 @@
 @section('content')
 <x-ui.page-header title="Items" actionLabel="Add Item" :actionRoute="route('items.create')">
     <div class="btn-group" role="group">
-        <a href="{{ route('items.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-outline-secondary">Export Excel</a>
-        <a href="{{ route('items.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline-secondary">Export CSV</a>
-        <a href="{{ route('items.export.pdf', request()->query()) }}" class="btn btn-outline-secondary">Export PDF</a>
+        <a href="{{ route('items.export', array_merge(request()->query(), ['format' => 'xlsx'])) }}" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-excel"></i> Export Excel</a>
+        <a href="{{ route('items.export', array_merge(request()->query(), ['format' => 'csv'])) }}" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-csv"></i> Export CSV</a>
+        <a href="{{ route('items.export.pdf', request()->query()) }}" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-pdf"></i> Export PDF</a>
     </div>
 </x-ui.page-header>
 

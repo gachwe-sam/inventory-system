@@ -16,7 +16,7 @@
                 <thead><tr><th>Item</th><th>Quantity</th><th>Unit Price</th><th></th></tr></thead>
                 <tbody id="item-rows"></tbody>
             </table>
-            <button type="button" id="add-row" class="btn btn-sm btn-outline-primary">+ Add Item</button>
+            <button type="button" id="add-row" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus"></i> Add Item</button>
 
             <template id="item-row-template">
                 <tr>
@@ -30,12 +30,12 @@
                     </td>
                     <td><input type="number" name="items[__INDEX__][quantity]" class="form-control" min="1" required></td>
                     <td><input type="number" step="0.01" name="items[__INDEX__][unit_price]" class="form-control" min="0"></td>
-                    <td><button type="button" class="btn btn-sm btn-danger remove-row">&times;</button></td>
+                    <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="bi bi-trash"></i></button></td>
                 </tr>
             </template>
 
             <div class="mt-3">
-                <button type="submit" class="btn btn-success">Save Purchase</button>
+                <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Save Purchase</button>
             </div>
         </form>
     </div>

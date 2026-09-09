@@ -25,7 +25,8 @@
 
         <x-ui.error-list :errors="$errors" />
 
-        <button type="submit" class="btn btn-success">Update</button>
+        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Update</button>
+        <a href="{{ route('branches.show', $branch) }}" class="btn btn-secondary"><i class="bi bi-x-lg"></i> Cancel</a>
     </form>
 </x-ui.card>
 @endsection

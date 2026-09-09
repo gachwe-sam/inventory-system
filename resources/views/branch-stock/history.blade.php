@@ -37,5 +37,5 @@
     <div class="card-footer">{{ $movements->links() }}</div>
 </div>
 
-<a href="{{ $back }}" class="btn btn-secondary mt-3">Back to branch</a>
+<a href="{{ $back }}" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Back to branch</a>
 @endsection

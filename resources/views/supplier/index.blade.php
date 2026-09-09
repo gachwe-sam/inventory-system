@@ -6,6 +6,7 @@
 <x-ui.search-bar name="search" :value="request('search')" placeholder="Search name or description" />
 
 <x-ui.data-table
+    id="suppliers-table"
     :ajax-url="route('suppliers.data')"
     :columns="[
         ['title' => '#', 'formatter' => 'rownum', 'hozAlign' => 'center', 'width' => 60],

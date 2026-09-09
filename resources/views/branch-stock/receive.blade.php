@@ -13,8 +13,8 @@
 
         <x-ui.error-list :errors="$errors" />
 
-        <button type="submit" class="btn btn-success">Receive</button>
-        <a href="{{ $back }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-success"><i class="bi bi-box-arrow-down"></i> Receive</button>
+        <a href="{{ $back }}" class="btn btn-secondary"><i class="bi bi-x-lg"></i> Cancel</a>
     </form>
 </x-ui.card>
 @endsection

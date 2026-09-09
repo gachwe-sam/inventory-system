@@ -11,7 +11,7 @@
                 <label class="form-label">Email address</label>
                 <input type="email" name="email" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Send OTP</button>
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-envelope"></i> Send OTP</button>
         </form>
     </div>
 </div>

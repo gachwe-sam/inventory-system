@@ -16,7 +16,7 @@
                 <label class="form-label">6-digit OTP</label>
                 <input type="text" name="otp" class="form-control" maxlength="6" required>
             </div>
-            <button type="submit" class="btn btn-success w-100">Verify OTP</button>
+            <button type="submit" class="btn btn-success w-100"><i class="bi bi-check2"></i> Verify OTP</button>
         </form>
         @error('otp') <div class="alert alert-danger mt-3">{{ $message }}</div> @enderror
     </div>

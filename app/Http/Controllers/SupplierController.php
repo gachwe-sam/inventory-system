@@ -78,4 +78,14 @@ class SupplierController extends Controller
             'item_id' => ['nullable', 'exists:items,id'],
         ]);
     }
+    private function supplierOptions(): array
+    {
+        return Supplier::orderBy('name')
+            ->get()
+            ->map(fn (Supplier $supplier) => [
+                'id' => $supplier->id,
+                'name' => $supplier->name,
+            ])
+            ->toArray();
+    }
 }

@@ -28,6 +28,6 @@
     </div>
 </div>
 
-<a href="{{ route('purchases.edit', $purchase) }}" class="btn btn-sm btn-warning mt-3">Edit</a>
-<a href="{{ route('purchases.index') }}" class="btn btn-secondary mt-3">Back to Purchases</a>
+<a href="{{ route('purchases.edit', $purchase) }}" class="btn btn-sm btn-warning mt-3"><i class="bi bi-pencil"></i> Edit</a>
+<a href="{{ route('purchases.index') }}" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Back to Purchases</a>
 @endsection

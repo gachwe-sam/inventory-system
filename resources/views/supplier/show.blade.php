@@ -10,8 +10,8 @@
         <p><strong>Item:</strong> {{ $supplier->item?->name ?? '—' }}</p>
     </div>
     <div class="card-footer">
-        <a href="{{ route('suppliers.edit', $supplier) }}" class="btn btn-sm btn-warning">Edit</a>
-        <a href="{{ route('suppliers.index') }}" class="btn btn-sm btn-secondary">Back</a>
+        <a href="{{ route('suppliers.edit', $supplier) }}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i> Edit</a>
+        <a href="{{ route('suppliers.index') }}" class="btn btn-sm btn-secondary"><i class="bi bi-arrow-left"></i> Back</a>
     </div>
 </div>
 @endsection

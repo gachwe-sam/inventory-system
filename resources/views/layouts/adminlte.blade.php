@@ -32,7 +32,7 @@
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="dropdown-item">Log Out</button>
+                                <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Log Out</button>
                             </form>
                         </li>
                     </ul>

@@ -26,8 +26,8 @@
                 <input type="number" name="item_id" value="{{ old('item_id') }}" class="form-control @error('item_id') is-invalid @enderror">
                 @error('item_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
-            <button type="submit" class="btn btn-success">Save</button>
-            <a href="{{ route('suppliers.index') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Save</button>
+            <a href="{{ route('suppliers.index') }}" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Cancel</a>
         </form>
     </div>
 </div>
