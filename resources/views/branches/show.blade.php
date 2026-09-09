@@ -31,8 +31,8 @@
                         <td><a href="{{ route('branches.show', $subbranch) }}">{{ $subbranch->name }}</a></td>
                         <td>{{ $subbranch->stock()->count() }}</td>
                         <td>
-                            <a href="{{ route('branches.create', ['parent_id' => $subbranch->id]) }}" class="btn btn-sm btn-outline-primary">Add Subbranch</a>
-                            <a href="{{ route('branches.edit', $subbranch) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('branches.create', ['parent_id' => $subbranch->id]) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-lg"></i> Add Subbranch</a>
+                            <a href="{{ route('branches.edit', $subbranch) }}" class="btn btn-sm btn-warning"><i class="bi bi-pencil-lg"></i> Edit</a>
                         </td>
                     </tr>
                     @endforeach
@@ -58,11 +58,11 @@
                         <td>{{ $row->quantity }}</td>
                         <td>{{ $row->reorder_level }}</td>
                         <td>
-                            <a href="{{ route('branch-stock.receive.form', $row) }}" class="btn btn-sm btn-success">Receive</a>
-                            <a href="{{ route('branch-stock.issue.form', $row) }}" class="btn btn-sm btn-warning">Issue</a>
-                            <a href="{{ route('branch-stock.transfer.form', $row) }}" class="btn btn-sm btn-primary">Transfer</a>
-                            <a href="{{ route('branch-stock.history', $row) }}" class="btn btn-sm btn-outline-secondary">History</a>
-                            <a href="{{ route('branch-stock.edit', $row) }}" class="btn btn-sm btn-outline-warning">Reorder Level</a>
+                            <a href="{{ route('branch-stock.receive.form', $row) }}" class="btn btn-sm btn-success"><i class="bi bi-arrow-down"></i> Receive</a>
+                            <a href="{{ route('branch-stock.issue.form', $row) }}" class="btn btn-sm btn-warning"><i class="bi bi-arrow-up"></i> Issue</a>
+                            <a href="{{ route('branch-stock.transfer.form', $row) }}" class="btn btn-sm btn-primary"><i class="bi bi-arrow-left-right"></i> Transfer</a>
+                            <a href="{{ route('branch-stock.history', $row) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-clock-history"></i> History</a>
+                            <a href="{{ route('branch-stock.edit', $row) }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil-square"></i> Reorder Level</a>
                         </td>
                     </tr>
                     @empty
@@ -74,5 +74,5 @@
     </div>
 @endif
 
-<a href="{{ route('branches.index') }}" class="btn btn-secondary mt-3">Back to branches</a>
+<a href="{{ route('branches.index') }}" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Back to branches</a>
 @endsection

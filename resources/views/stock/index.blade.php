@@ -53,7 +53,7 @@
                                     @csrf
                                     <input type="hidden" name="branch_id" value="{{ $branch->id }}">
                                     <input type="hidden" name="item_id" value="{{ $item->id }}">
-                                    <button type="submit" class="btn btn-sm btn-primary">Add to my branch stock</button>
+                                    <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Add to my branch stock</button>
                                 </form>
                             </td>
                         </tr>

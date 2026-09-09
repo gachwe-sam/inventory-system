@@ -31,7 +31,7 @@
                     <td>{{ $row->quantity }}</td>
                     <td>{{ $row->reorder_level }}</td>
                     <td>
-                        <a href="{{ route('branch-stock.history', $row) }}" class="btn btn-sm btn-outline-secondary">History</a>
+                        <a href="{{ route('branch-stock.history', $row) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-clock-history"></i> History</a>
                     </td>
                 </tr>
                 @empty
@@ -41,5 +41,5 @@
         </table>
     </div>
 </div>
-<a href="{{ route('items.index') }}" class="btn btn-secondary mt-3">Back to items</a>
+<a href="{{ route('items.index') }}" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Back to items</a>
 @endsection

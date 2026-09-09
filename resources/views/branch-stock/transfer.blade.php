@@ -24,8 +24,8 @@
 
         <x-ui.error-list :errors="$errors" />
 
-        <button type="submit" class="btn btn-primary">Transfer</button>
-        <a href="{{ $back }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-arrow-left-right"></i> Transfer</button>
+        <a href="{{ $back }}" class="btn btn-secondary"><i class="bi bi-x-lg"></i> Cancel</a>
     </form>
 </x-ui.card>
 @endsection

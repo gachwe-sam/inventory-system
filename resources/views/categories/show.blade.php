@@ -44,10 +44,10 @@
     <p class="text-muted">Items filed under "{{ $category->name }}".</p>
 
     <div class="btn-group mb-3" role="group">
-        <a href="{{ route('items.export', ['format' => 'xlsx', 'category_id' => $category->id]) }}" class="btn btn-outline-secondary">Export Excel</a>
-        <a href="{{ route('items.export', ['format' => 'csv', 'category_id' => $category->id]) }}" class="btn btn-outline-secondary">Export CSV</a>
-        <a href="{{ route('items.export.pdf', ['category_id' => $category->id]) }}" class="btn btn-outline-secondary">Export PDF</a>
-        <a href="{{ route('items.index', ['category_id' => $category->id]) }}" class="btn btn-outline-primary">Manage in Items (import here)</a>
+        <a href="{{ route('items.export', ['format' => 'xlsx', 'category_id' => $category->id]) }}" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-excel"></i> Export Excel</a>
+        <a href="{{ route('items.export', ['format' => 'csv', 'category_id' => $category->id]) }}" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-csv"></i> Export CSV</a>
+        <a href="{{ route('items.export.pdf', ['category_id' => $category->id]) }}" class="btn btn-outline-secondary"><i class="bi bi-file-earmark-pdf"></i> Export PDF</a>
+        <a href="{{ route('items.index', ['category_id' => $category->id]) }}" class="btn btn-outline-primary"><i class="bi bi-box"></i> Manage in Items (import here)</a>
     </div>
 
     <div class="card">
@@ -68,7 +68,7 @@
                         <td>{{ $item->quantity }}</td>
                         <td>{{ $item->unit_price }}</td>
                         <td>
-                            <a href="{{ route('items.edit', $item) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('items.edit', $item) }}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i> Edit</a>
                         </td>
                     </tr>
                     @empty
@@ -80,5 +80,5 @@
     </div>
 @endif
 
-<a href="{{ route('categories.index') }}" class="btn btn-secondary mt-3">Back to Categories</a>
+<a href="{{ route('categories.index') }}" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Back to Categories</a>
 @endsection

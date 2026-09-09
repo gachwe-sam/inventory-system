@@ -25,7 +25,7 @@
 
         <x-ui.error-list :errors="$errors" />
 
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Save</button>
     </form>
 </x-ui.card>
 @endsection

@@ -3,6 +3,6 @@
 @if ($text)
     <div class="alert alert-{{ $type }} alert-dismissible fade show">
         {{ $text }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"><i class="bi bi-x"></i></button>
     </div>
 @endif

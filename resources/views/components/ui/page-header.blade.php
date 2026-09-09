@@ -3,7 +3,7 @@
     <h2 class="mb-0">{{ $title }}</h2>
     <div class="d-flex gap-2">
         @if ($actionLabel && $actionRoute)
-            <a href="{{ $actionRoute }}" class="btn btn-primary">{{ $actionLabel }}</a>
+            <a href="{{ $actionRoute }}" class="btn btn-primary"><i class="bi bi-plus"></i> {{ $actionLabel }}</a>
         @endif
         {{ $slot ?? '' }}
     </div>

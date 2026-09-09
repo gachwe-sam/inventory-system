@@ -16,16 +16,14 @@
 @endif
 
 <form method="GET" action="{{ route('branches.index') }}" class="row g-2 mb-3">
+    <x-ui.search-bar name="search" :value="request('search')" placeholder="Search name or description" target="branches-table" />
     <div class="col-auto">
-        <input type="text" name="search" value="{{ request('search') }}"
-               class="form-control" placeholder="Search branch name">
-    </div>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-primary">Filter</button>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-funnel"></i> Filter</button>
     </div>
 </form>
 
 <x-ui.data-table
+    id="branches-table"
     :ajax-url="route('branches.data', request()->query())"
     :columns="[
         ['title' => '#', 'formatter' => 'rownum', 'hozAlign' => 'center', 'width' => 60],

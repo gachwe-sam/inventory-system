@@ -12,7 +12,7 @@
         <p>Welcome, {{ auth()->user()->name }}!</p>
         <form action="/logout" method="POST">
             @csrf
-            <button type="submit">Logout</button>
+            <button type="submit"><i class="bi bi-box-arrow-right"></i> Logout</button>
         </form>
     @else
              
@@ -24,7 +24,7 @@
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
-                <button type="submit">Register</button>
+                <button type="submit"><i class="bi bi-person-plus"></i> Register</button>
             </form>
         </div>
 
@@ -34,7 +34,7 @@
                 @csrf
                 <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <button type="submit">Login</button>
+                <button type="submit"><i class="bi bi-box-arrow-in-right"></i> Login</button>
             </form>
             @if ($errors->any())
                 <div style="color: red;">
