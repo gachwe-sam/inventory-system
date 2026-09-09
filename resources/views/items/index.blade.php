@@ -23,10 +23,7 @@
 
 
 <form method="GET" action="{{ route('items.index') }}" class="row g-2 my-3">
-    <div class="col-auto">
-        <input type="text" name="search" value="{{ request('search') }}"
-               class="form-control" placeholder="Search name or description">
-    </div>
+    <x-ui.search-bar name="search" :value="request('search')" placeholder="Search name or description" target="items-table" />
     <div class="col-auto">
         <select name="category_id" class="form-select">
             <option value="">All categories</option>
@@ -42,13 +39,15 @@
                {{ request()->boolean('low_stock') ? 'checked' : '' }}>
         <label class="form-check-label" for="lowStock">Low stock only</label>
     </div>
-    <div class="col-auto">
-        <i class="fa-solid fa-filter">Filter</i>
-        <button type="submit" class="btn btn-primary">Filter</button>
+    <div class="col-auto">        
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-funnel"></i>
+            Filter</button>
     </div>
 </form>
 
 <x-ui.data-table
+    id="items-table"
     :ajax-url="route('items.data', request()->query())"
     :columns="[
         ['title' => '#', 'formatter' => 'rownum', 'hozAlign' => 'center', 'width' => 60],
