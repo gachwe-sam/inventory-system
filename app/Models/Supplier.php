@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Supplier extends Model
 {
@@ -21,13 +22,20 @@ class Supplier extends Model
         return $this->belongsTo(Item::class);
     }
 
-    public function scopesearch(Builder $query, ?string $term): Builder
+        public function scopesearch(Builder $query, ?string $term): Builder
     {
         if (! $term) {
             return $query;
         }
-        return $query->where('name', 'like', '%' . $term . '%');
-    } 
+
+        return $query->where(function ($q) use ($term) {
+            $q->where('name', 'like', '%' . $term . '%')
+              ->orWhere('email', 'like', '%' . $term . '%')
+              ->orWhereHas('item', function ($q) use ($term) {
+                  $q->where('name', 'like', '%' . $term . '%');
+              });
+        });
+    }
 
 }
 

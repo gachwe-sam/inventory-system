@@ -13,9 +13,10 @@ class SupplierController extends Controller
         return view('supplier.index');
     }
 
-    public function data(Request $request)
+        public function data(Request $request)
     {
         $suppliers = Supplier::with('item')
+            ->search($request->input('search'))
             ->orderBy('id', 'desc')
             ->paginate($request->integer('size', 15));
 
@@ -77,15 +78,7 @@ class SupplierController extends Controller
             ],
             'item_id' => ['nullable', 'exists:items,id'],
         ]);
-    }
-    private function supplierOptions(): array
-    {
-        return Supplier::orderBy('name')
-            ->get()
-            ->map(fn (Supplier $supplier) => [
-                'id' => $supplier->id,
-                'name' => $supplier->name,
-            ])
-            ->toArray();
-    }
+    }    
+
+    
 }
