@@ -41,8 +41,8 @@
 
 <p class="text-muted small mt-3">
     <i class="bi bi-info-circle"></i>
-    SMS and WhatsApp are stubbed in — turning one on before a real provider is wired
-    (<code>app/Services/Otp/Channels/SmsOtpChannel.php</code> / <code>WhatsAppOtpChannel.php</code>)
-    makes it show up as a choice on the login page but fail when someone actually picks it.
+    This is just a list of channels that can be used to send OTPs. You can enable or disable them as needed.
+    and the actual sending of OTPs will depend on the configuration of your application and the availability of these channels.
+    NOTE: I will rewire them later on for now this is a just a rerun of what it will look like.
 </p>
 @endsection
