@@ -29,8 +29,8 @@ class AppServiceProvider extends ServiceProvider
         // Feeds the sidebar menu to layouts.adminlte automatically —
         // every page using that layout gets $menu without a controller
         // ever passing it.
-        View::composer('layouts.adminlte', function ($view) {
-            $view->with('menu', [
+                View::composer('layouts.adminlte', function ($view) {
+            $menu = [
                 ['label' => 'Dashboard', 'route' => 'dashboard', 'pattern' => 'dashboard', 'icon' => 'bi-speedometer'],
                 ['label' => 'Categories', 'route' => 'categories.index', 'pattern' => 'categories.*', 'icon' => 'bi-diagram-3'],
                 ['label' => 'Items', 'route' => 'items.index', 'pattern' => 'items.*', 'icon' => 'bi-box-seam'],
@@ -40,7 +40,14 @@ class AppServiceProvider extends ServiceProvider
                 ['label' => 'Adjust Stock', 'route' => 'stock.index', 'pattern' => 'stock.*', 'icon' => 'bi-clipboard-data'],
                 ['label' => 'Staff Permissions', 'route' => 'manager.staff.index', 'pattern' => 'manager.*', 'icon' => 'bi-people'],
                 ['label' => 'Users', 'route' => 'users.index', 'pattern' => 'users.*', 'icon' => 'bi-person-gear'],
-            ]);
+            ];
+
+            if (auth()->user()?->hasRole('admin')) {
+                $menu[] = ['label' => 'OTP Channels', 'route' => 'admin.otp-channels.index', 'pattern' => 'admin.otp-channels.*', 'icon' => 'bi-shield-lock'];
+            }
+
+            $view->with('menu', $menu);
         });
+
     }
 }

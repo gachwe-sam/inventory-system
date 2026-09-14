@@ -1,55 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Home</title>
-</head>
-<body>
-     <p><h2>Please log in or register.</h2></p>
-    @auth
-        <p>Welcome, {{ auth()->user()->name }}!</p>
-        <form action="/logout" method="POST">
-            @csrf
-            <button type="submit"><i class="bi bi-box-arrow-right"></i> Logout</button>
-        </form>
-    @else
-             
-        <div style="border:3px solid brown; margin-bottom: 20px;">
-            <h2>REGISTER</h2>
-            <form action='/register' method="POST">
-                @csrf
-                <input type="text" name="name" placeholder="Name" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
-                <button type="submit"><i class="bi bi-person-plus"></i> Register</button>
-            </form>
-        </div>
+@extends('layouts.adminlte-guest')
+@section('title', 'Welcome')
 
-        <div style="border:3px solid blue;">
-            <h2>LOGIN</h2>
-            <form action='/login' method="POST">
-                @csrf
-                <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit"><i class="bi bi-box-arrow-in-right"></i> Login</button>
-            </form>
-            @if ($errors->any())
-                <div style="color: red;">
-                    @foreach ($errors->all() as $error)
-                        <p>{{ $error }}</p>
-                    @endforeach
-                </div>
-            @endif
-        </div>
-    @endauth
+@section('content')
+<p class="login-box-msg">Track stock across every branch, live.</p>
 
-    @if (session('success'))
-        <div style="color: green; margin-top: 20px;">
-            {{ session('success') }}
-        </div>
-    @endif
-</body>
-</html>
+<x-ui.alert type="success" :message="session('success')" />
+
+@auth
+    <p class="text-center mb-3">Welcome back, {{ auth()->user()->name }}.</p>
+
+    <a href="{{ route('dashboard') }}" class="btn btn-primary w-100 mb-3">
+        <i class="bi bi-speedometer2"></i> Go to Dashboard
+    </a>
+
+    <form action="{{ route('logout') }}" method="POST" class="text-center">
+        @csrf
+        <button type="submit" class="btn btn-link text-muted small">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+    </form>
+@else
+    <div class="d-grid gap-2">
+        <a href="{{ route('login') }}" class="btn btn-primary">
+            <i class="bi bi-box-arrow-in-right"></i> Log in
+        </a>
+        <a href="{{ route('register') }}" class="btn btn-outline-primary">
+            <i class="bi bi-person-plus"></i> Register
+        </a>
+    </div>
+@endauth
+@endsection

@@ -11,9 +11,10 @@ abstract class Controller
     /**
      * Log a user in and regenerate the session to prevent session fixation.
      */ 
-    protected function logUserIn(Request $request, User $user): void
+        protected function logUserIn(Request $request, User $user, bool $remember = false): void
     {
-        auth()->login($user);
+        auth()->login($user, $remember);
         $request->session()->regenerate();
     }
+
 }
