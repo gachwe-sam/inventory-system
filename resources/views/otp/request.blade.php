@@ -1,18 +1,26 @@
-@extends('layouts.adminlte')
-@section('title', 'Login with OTP')
+@extends('layouts.adminlte-guest')
+@section('title', "Verify it's you")
 
 @section('content')
-<div class="card mx-auto" style="max-width: 420px;">
-    <div class="card-body">
-        <h3 class="card-title">Login with OTP</h3>
-        <form action="{{ route('otp.send') }}" method="POST">
-            @csrf
-            <div class="mb-3">
-                <label class="form-label">Email address</label>
-                <input type="email" name="email" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-envelope"></i> Send OTP</button>
-        </form>
-    </div>
-</div>
+<p class="login-box-msg">Choose how you'd like to receive your verification code.</p>
+
+<form method="POST" action="{{ route('otp.send') }}">
+    @csrf
+
+    @foreach ($channels as $channel)
+        <div class="form-check mb-2">
+            <input type="radio" name="channel" value="{{ $channel }}" id="channel-{{ $channel }}"
+                   class="form-check-input" {{ $loop->first ? 'checked' : '' }} required>
+            <label for="channel-{{ $channel }}" class="form-check-label text-capitalize">{{ $channel }}</label>
+        </div>
+    @endforeach
+
+    @error('channel')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
+
+    <button type="submit" class="btn btn-primary w-100 mt-3">
+        <i class="bi bi-send"></i> Send code
+    </button>
+</form>
 @endsection

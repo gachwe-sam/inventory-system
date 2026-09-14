@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Services\Otp\OtpService;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -23,14 +24,26 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+        
+        public function store(LoginRequest $request, OtpService $otpService): RedirectResponse
     {
-        $request->authenticate();
+        $user = $request->validateCredentials();
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        if (empty($otpService->availableChannelsFor($user))) {
+            $this->logUserIn($request, $user, $request->boolean('remember'));
+
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+
+        $request->session()->put('2fa_user_id', $user->id);
+        $request->session()->put('2fa_remember', $request->boolean('remember'));
+
+        return redirect()->route('otp.choose-channel');
     }
+
+
 
     /**
      * Destroy an authenticated session.

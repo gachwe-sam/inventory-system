@@ -3,78 +3,84 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\Otp\OtpService;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
+use InvalidArgumentException;
 
 class OtpController extends Controller
 {
-    public function showRequestForm()
+        public function showChooseChannelForm(Request $request, OtpService $otpService)
     {
-        return view('otp.request');
-    }
+        $user = $this->pendingUser($request);
 
-    public function sendOtp(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ]);
+        $channels = $otpService->availableChannelsFor($user);
 
-        $user = User::where('email', $request->email)->firstOrFail();
+        if (empty($channels)) {
+            $this->logUserIn($request, $user, (bool) $request->session()->get('2fa_remember'));
+            $request->session()->forget(['2fa_user_id', '2fa_remember']);
 
-        return $this->issueOtp($request, $user);
-    }
-
-    
-    public function issueOtp(Request $request, User $user): RedirectResponse
-    {
-        $otp = random_int(100000, 999999);
-
-        $request->session()->regenerate();
-        session([
-            'otp' => $otp,
-            'otp_user_id' => $user->id,
-        ]);
-
-        Mail::raw("Your login verification code is: {$otp}", function ($message) use ($user) {
-            $message->to($user->email)->subject('Your login verification code');
-        });
-
-        // SMTP isn't configured yet, so surface the code on the page too.
-        return redirect()->route('otp.verify.form')->with('debug_otp', $otp);
-    }
-
-    public function showVerifyForm()
-    {
-        if (!session('otp')) {
-            return redirect('/')->withErrors(['email' => 'Please log in again.']);
+            return redirect()->route('dashboard')->with('success', 'Logged in successfully!');
         }
+
+        return view('otp.request', ['channels' => $channels]);
+    }
+
+
+    public function send(Request $request, OtpService $otpService): RedirectResponse
+    {
+        $user = $this->pendingUser($request);
+
+        $request->validate([
+            'channel' => ['required', Rule::in($otpService->availableChannelsFor($user))],
+        ]);
+
+        try {
+            $otpService->issue($user, $request->input('channel'));
+        } catch (InvalidArgumentException $e) {
+            return back()->withErrors(['channel' => 'That delivery method is not available right now.']);
+        }
+
+        // MAIL_MAILER=log for now, so surface the code on the page too.
+        return redirect()->route('otp.verify.form')->with('debug_otp', $user->otp);
+    }
+
+    public function showVerifyForm(Request $request)
+    {
+        $this->pendingUser($request);
+
         return view('otp.verify');
     }
 
-    public function verifyOtp(Request $request)
+    public function verify(Request $request, OtpService $otpService): RedirectResponse
     {
-        $request->validate([
-            'otp' => 'required|digits:6',
-        ]);
+        $request->validate(['code' => 'required|digits:6']);
 
-        $storedOtp = session('otp');
-        $userId = session('otp_user_id');
+        $user = $this->pendingUser($request);
 
-        if (!$storedOtp || !$userId) {
-            return back()->withErrors(['otp' => 'OTP expired or missing. Please log in again.']);
+        if (! $otpService->verify($user, $request->input('code'))) {
+            return back()->withErrors(['code' => 'Invalid or expired code. Please try again.']);
         }
 
-        if ($request->otp != $storedOtp) {
-            return back()->withErrors(['otp' => 'Invalid OTP. Please try again.']);
-        }
+        $this->logUserIn($request, $user, (bool) $request->session()->get('2fa_remember'));
 
-        $user = User::findOrFail($userId);
-
-        $this->logUserIn($request, $user);
-
-        session()->forget(['otp', 'otp_user_id']);
+        $request->session()->forget(['2fa_user_id', '2fa_remember']);
 
         return redirect()->route('dashboard')->with('success', 'Logged in successfully!');
+    }
+
+    private function pendingUser(Request $request): User
+    {
+        $userId = $request->session()->get('2fa_user_id');
+
+        if (! $userId) {
+            throw new HttpResponseException(
+                redirect()->route('login')->withErrors(['email' => 'Please log in again.'])
+            );
+        }
+
+        return User::findOrFail($userId);
     }
 }

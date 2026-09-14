@@ -1,24 +1,18 @@
-@extends('layouts.adminlte')
-@section('title', 'Enter OTP')
+@extends('layouts.adminlte-guest')
+@section('title', 'Enter your code')
 
 @section('content')
-<div class="card mx-auto" style="max-width: 420px;">
-    <div class="card-body">
-        <h3 class="card-title">Enter OTP</h3>
-        @if(session('debug_otp'))
-            <div class="alert alert-warning">
-                <strong>DEV MODE:</strong> Your OTP is <code>{{ session('debug_otp') }}</code>
-            </div>
-        @endif
-        <form action="{{ route('otp.verify') }}" method="POST">
-            @csrf
-            <div class="mb-3">
-                <label class="form-label">6-digit OTP</label>
-                <input type="text" name="otp" class="form-control" maxlength="6" required>
-            </div>
-            <button type="submit" class="btn btn-success w-100"><i class="bi bi-check2"></i> Verify OTP</button>
-        </form>
-        @error('otp') <div class="alert alert-danger mt-3">{{ $message }}</div> @enderror
-    </div>
-</div>
+<p class="login-box-msg">Enter the 6-digit code we sent you.</p>
+
+<x-ui.alert type="warning" :message="session('debug_otp') ? 'DEV MODE: your code is ' . session('debug_otp') : null" />
+
+<form method="POST" action="{{ route('otp.verify') }}">
+    @csrf
+
+    <x-ui.form-field name="code" label="6-digit code" maxlength="6" required autofocus />
+
+    <button type="submit" class="btn btn-success w-100">
+        <i class="bi bi-check2"></i> Verify code
+    </button>
+</form>
 @endsection

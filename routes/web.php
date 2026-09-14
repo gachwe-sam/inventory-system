@@ -11,6 +11,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\OtpChannelController;
 
 Route::get('/', function () {
     return view('home');
@@ -76,6 +77,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/staff/data', [BranchManagerStaffController::class, 'data'])->name('staff.data');
         Route::get('/staff/{user}/edit', [BranchManagerStaffController::class, 'edit'])->name('staff.edit');
         Route::patch('/staff/{user}', [BranchManagerStaffController::class, 'update'])->name('staff.update');
+    });
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/otp-channels', [OtpChannelController::class, 'index'])->name('otp-channels.index');
+        Route::patch('/otp-channels/{otpChannel}', [OtpChannelController::class, 'update'])->name('otp-channels.update');
     });
 });
 

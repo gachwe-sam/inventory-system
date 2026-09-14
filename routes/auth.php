@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OtpController;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -35,6 +36,12 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+        Route::get('otp/choose-channel', [OtpController::class, 'showChooseChannelForm'])->name('otp.choose-channel');
+    Route::post('otp/send', [OtpController::class, 'send'])->name('otp.send');
+    Route::get('otp/verify', [OtpController::class, 'showVerifyForm'])->name('otp.verify.form');
+    Route::post('otp/verify', [OtpController::class, 'verify'])->name('otp.verify');
+
 });
 
 Route::middleware('auth')->group(function () {
