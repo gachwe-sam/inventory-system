@@ -33,6 +33,10 @@ class CategoryController extends Controller
 
         return response()->json(['data' => $rows, 'last_page' => $categories->lastPage()]);
     }
+    public function downloadImportTemplate()
+    {
+        return Excel::download(new \App\Exports\CategoriesImportTemplateExport(), 'categories-import-template.xlsx');
+    }
 
     private function paginatedCategories(Request $request, int $perPage): LengthAwarePaginator
     {

@@ -10,7 +10,9 @@
     <x-ui.form-field name="password" label="Password" type="password" required autocomplete="current-password" />
 
     <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary">Confirm</button>
+        <button type="submit" class="btn btn-primary">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-key"></i> Confirm</button>
     </div>
 </form>
 @endsection

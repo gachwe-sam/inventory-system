@@ -14,7 +14,9 @@
 
     <div class="d-flex align-items-center justify-content-between">
         <a href="{{ route('login') }}" class="text-muted small">Already registered?</a>
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button type="submit" class="btn btn-primary">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-person-plus"></i> Register</button>
     </div>
 </form>
 @endsection

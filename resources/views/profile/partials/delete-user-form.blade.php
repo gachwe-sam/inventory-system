@@ -23,7 +23,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Delete Account</button>
+                    <button type="submit" class="btn btn-danger">
+                        <span class="loading-dots d-done"></span>
+                        Delete Account</button>
                 </div>
             </form>
         </div>

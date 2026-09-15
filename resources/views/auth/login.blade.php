@@ -21,7 +21,9 @@
         @if (Route::has('password.request'))
             <a href="{{ route('password.request') }}" class="text-muted small">Forgot your password?</a>
         @endif
-        <button type="submit" class="btn btn-primary">Log in</button>
+        <button type="submit" class="btn btn-primary">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-box-arrow-in-right"></i> Log in</button>
     </div>
 </form>
 @endsection

@@ -21,7 +21,9 @@
 
         <x-ui.error-list :errors="$errors" />
 
-        <button type="submit" class="btn btn-success">Update</button>
+        <button type="submit" class="btn btn-success">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-save"></i> Update</button>
         <a href="{{ route('manager.staff.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </x-ui.card>

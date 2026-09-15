@@ -20,6 +20,7 @@
     @enderror
 
     <button type="submit" class="btn btn-primary w-100 mt-3">
+        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
         <i class="bi bi-send"></i> Send code
     </button>
 </form>

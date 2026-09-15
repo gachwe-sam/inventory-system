@@ -14,7 +14,10 @@
     @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
         <p class="text-muted small">
             Your email address is unverified.
-            <button form="send-verification" class="btn btn-link btn-sm p-0 align-baseline">Click here to re-send the verification email.</button>
+            <button form="send-verification" class="btn btn-link btn-sm p-0 align-baseline">
+                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                <i class="bi bi-envelope"></i> Click here to re-send the verification email.
+            </button>
         </p>
         @if (session('status') === 'verification-link-sent')
             <x-ui.alert type="success" message="A new verification link has been sent to your email address." />
@@ -22,7 +25,9 @@
     @endif
 
     <div class="d-flex align-items-center gap-3 mt-3">
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-save"></i> Save</button>
         @if (session('status') === 'profile-updated')
             <span class="text-muted small">Saved.</span>
         @endif

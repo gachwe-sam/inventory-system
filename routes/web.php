@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/categories/export/{format}', [CategoryController::class, 'exportExcel'])->whereIn('format', ['xlsx', 'csv'])->name('categories.export');
     Route::post('/categories/import', [CategoryController::class, 'import'])->name('categories.import');
     Route::post('/categories/import/undo', [CategoryController::class, 'undoImport'])->name('categories.import.undo');
+    Route::get('/categories/import/template', [CategoryController::class, 'downloadImportTemplate'])->name('categories.import.template');
     Route::get('/categories/data', [CategoryController::class, 'data'])->name('categories.data');
     Route::resource('categories', CategoryController::class);
 

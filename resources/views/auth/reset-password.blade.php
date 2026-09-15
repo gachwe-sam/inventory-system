@@ -14,7 +14,9 @@
     <x-ui.form-field name="password_confirmation" label="Confirm Password" type="password" required autocomplete="new-password" />
 
     <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary">Reset Password</button>
+        <button type="submit" class="btn btn-primary">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-key"></i> Reset Password</button>
     </div>
 </form>
 @endsection

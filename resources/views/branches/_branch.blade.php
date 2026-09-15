@@ -10,7 +10,8 @@
         <a href="{{ route('branches.edit', $branch) }}" class="btn btn-sm btn-warning"><i class="bi bi-pencil-lg"></i> Edit</a>
         <form action="{{ route('branches.destroy', $branch) }}" method="POST" style="display:inline;">
             @csrf @method('DELETE')
-            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this branch and all of its subbranch?')"><i class="bi bi-trash"></i> Delete</button>
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this branch and all of its subbranch?')">
+                <span class="loading-dots d-done"></span><i class="bi bi-trash"></i> Delete</button>
         </form>
     </td>
 </tr>

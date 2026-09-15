@@ -32,7 +32,9 @@
     </div>
 
     <div class="d-flex align-items-center gap-3">
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-save"></i> Save</button>
         @if (session('status') === 'password-updated')
             <span class="text-muted small">Saved.</span>
         @endif
