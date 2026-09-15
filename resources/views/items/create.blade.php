@@ -9,6 +9,9 @@
         <input type="file" name="spreadsheet" accept=".xlsx,.csv" class="form-control" style="max-width: 320px;" required>
         <button type="submit" class="btn btn-outline-primary"><i class="bi bi-upload"></i> Import</button>
         <small class="text-muted">Columns: Name, Description, Category (e.g. "Fertilizer &gt; CAN &gt; 25 KG BAG"), Quantity, Expiry Date, Unit Price, Reorder Level</small>
+        <div class="progress d-done w-100 mt-2" style="height: 6px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated d-none" role="progressbar" style="width: 100%;"></div>
+        </div>
     </form>
 
     @if(session()->has('last_import_ids'))
@@ -57,7 +60,9 @@
 
         <x-ui.error-list :errors="$errors" />
 
-        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Save</button>
+        <button type="submit" class="btn btn-success">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-save"></i> Save</button>
     </form>
 </x-ui.card>
 @endsection

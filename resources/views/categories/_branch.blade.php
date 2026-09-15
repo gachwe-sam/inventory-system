@@ -10,7 +10,8 @@
         <a href="{{ route('categories.edit', $category) }}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i> Edit</a>
         <form action="{{ route('categories.destroy', $category) }}" method="POST" style="display:inline;">
             @csrf @method('DELETE')
-            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this category and all of its subcategories?')"><i class="bi bi-trash"></i> Delete</button>
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this category and all of its subcategories?')">
+                <span class="loading-dots d-done"></span><i class="bi bi-trash"></i> Delete</button>
         </form>
     </td>
 </tr>

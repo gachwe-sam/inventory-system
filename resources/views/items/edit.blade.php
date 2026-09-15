@@ -36,7 +36,9 @@
 
         <x-ui.error-list :errors="$errors" />
 
-        <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Update</button>
+        <button type="submit" class="btn btn-success">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-save"></i> Update</button>
     </form>
 </x-ui.card>
 @endsection

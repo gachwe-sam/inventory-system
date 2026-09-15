@@ -11,7 +11,9 @@
 <div class="d-flex align-items-center justify-content-between">
     <form method="POST" action="{{ route('verification.send') }}">
         @csrf
-        <button type="submit" class="btn btn-primary">Resend Verification Email</button>
+        <button type="submit" class="btn btn-primary">
+            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            <i class="bi bi-envelope"></i> Resend Verification Email</button>
     </form>
 
     <form method="POST" action="{{ route('logout') }}">

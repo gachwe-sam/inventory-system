@@ -35,7 +35,9 @@
             </template>
 
             <div class="mt-3">
-                <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Save Purchase</button>
+                <button type="submit" class="btn btn-success">
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    <i class="bi bi-save"></i> Save Purchase</button>
             </div>
         </form>
     </div>

@@ -12,6 +12,7 @@
     <x-ui.form-field name="code" label="6-digit code" maxlength="6" required autofocus />
 
     <button type="submit" class="btn btn-success w-100">
+        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
         <i class="bi bi-check2"></i> Verify code
     </button>
 </form>
