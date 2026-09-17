@@ -8,7 +8,7 @@
         @csrf
         <input type="file" name="spreadsheet" accept=".xlsx,.csv" class="form-control" style="max-width: 320px;" required>
         <button type="submit" class="btn btn-outline-primary"><i class="bi bi-upload"></i> Import</button>
-        <small class="text-muted">Column: Path (e.g. "Fertilizer &gt; CAN &gt; 25 KG BAG") &mdash; one row per category, missing segments are created automatically.</small>
+        <small class="text-muted">Columns: Level 1 &ndash; Level 5 (e.g. Level 1 = "Fertilizer", Level 2 = "CAN", Level 3 = "25 KG BAG") &mdash; leave deeper levels blank if you don't need them. Missing categories are created automatically.</small>
         <div class="progress d-done w-100 mt-2" style="height: 6px;">
             <div class="progress-bar progress-bar-striped progress-bar-animated d-none" role="progressbar" style="width: 100%;"></div>
         </div>

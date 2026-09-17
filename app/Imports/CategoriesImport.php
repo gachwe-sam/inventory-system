@@ -20,46 +20,39 @@ class CategoriesImport implements ToCollection, WithHeadingRow
     /** @var array<init, array{row: int,path:string, status:string,reason: ?string}> */
     public array $preview = [];
 
-    public function collection(Collection $rows): void
+        public function collection(Collection $rows): void
     {
         foreach ($rows as $index => $row) {
-            // +1 because $index is 0-based, +1 again because row 1 is the heading row.
             $rowNumber = $index + 2;
-            $path = trim((string) ($row['path'] ?? ''));
 
-            if ($path === '') {
-                $this->fail($rowNumber, $path, 'Missing Path.');
+            $segments = $this->readLevels($row, $rowNumber);
+
+            if ($segments === null) {
                 continue;
             }
 
-            $segments = array_values(array_filter(
-                array_map('trim', explode('>', $path)),
-                fn ($segment) => $segment !== ''
-            ));
-
-            if (empty($segments)) {
-                $this->fail($rowNumber, $path, 'Path had no usable segments.');
-                continue;
-            }
+            $path = implode(' > ', $segments);
 
             $result = $this->walkPath($segments, $rowNumber, $path);
 
             if ($result === null) {
-               continue;
+                continue;
             }
 
-            [$createdIds,$newCount] = $result;
+            [$createdIds, $newCount] = $result;
 
-            if (! $this->dryRun){
+            if (! $this->dryRun) {
                 array_push($this->importedIds, ...$createdIds);
             }
+
             $status = $newCount > 0
                 ? 'will create ' . $newCount . ' new categor' . ($newCount === 1 ? 'y' : 'ies')
                 : 'already exists';
 
-            $this->preview[]=['row' => $rowNumber, 'path' => $path, 'status' => $status, 'reason' => null];
+            $this->preview[] = ['row' => $rowNumber, 'path' => $path, 'status' => $status, 'reason' => null];
         }
     }
+
 
     /**
      * @param string[] $segments
@@ -111,6 +104,38 @@ class CategoriesImport implements ToCollection, WithHeadingRow
     {
         $this->skipped[] = ['row' => $rowNumber, 'reason' => $reason];
         $this->preview[] = ['row' => $rowNumber, 'path' => $path, 'status' => 'problem', 'reason' => $reason];
+    }
+
+    private function readlevels(array $row, int $rowNumber): ?array
+    {
+        $levels=[
+            trim((string) ($row['level_1'] ?? '')),
+            trim((string) ($row['level_2'] ?? '')),
+            trim((string) ($row['level_3'] ?? '')),
+            trim((string) ($row['level_4'] ?? '')),
+            trim((string) ($row['level_5'] ?? '')),
+        ];
+
+        $lastfilled = -1;
+        foreach ($levels as $i => $value) {
+            if ($value !== ''){
+                $lastfilled = $i;
+            }
+        }
+
+        if ($lastFilled === -1){
+            $this->fail($rowNumber, '', 'At least 1 must be filled in.');
+            return null;
+        }
+
+        for ($i = 0; $i <= $lastFilled; $i++){
+            if($levels[$i] === ''){
+                $this->fail($rowNumber, implode('>',array_slice($levels, 0, $lastFilled + 1)), 'Level'.($i+1).'is blank, but a later level has a value - fill in every level up to that point.');
+                return null;
+            }
+        }
+
+        return array_slice($levels, 0, $lastFilled + 1);
     }
     
 }
