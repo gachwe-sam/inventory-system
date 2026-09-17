@@ -106,7 +106,7 @@ class CategoriesImport implements ToCollection, WithHeadingRow
         $this->preview[] = ['row' => $rowNumber, 'path' => $path, 'status' => 'problem', 'reason' => $reason];
     }
 
-    private function readlevels(array $row, int $rowNumber): ?array
+    private function readlevels($row, int $rowNumber): ?array
     {
         $levels=[
             trim((string) ($row['level_1'] ?? '')),
@@ -119,18 +119,18 @@ class CategoriesImport implements ToCollection, WithHeadingRow
         $lastfilled = -1;
         foreach ($levels as $i => $value) {
             if ($value !== ''){
-                $lastfilled = $i;
+                $lastFilled = $i;
             }
         }
 
         if ($lastFilled === -1){
-            $this->fail($rowNumber, '', 'At least 1 must be filled in.');
+            $this->fail($rowNumber, '', 'At least  level 1 must be filled in.');
             return null;
         }
 
         for ($i = 0; $i <= $lastFilled; $i++){
             if($levels[$i] === ''){
-                $this->fail($rowNumber, implode('>',array_slice($levels, 0, $lastFilled + 1)), 'Level'.($i+1).'is blank, but a later level has a value - fill in every level up to that point.');
+                $this->fail($rowNumber, implode('>' ,array_slice($levels, 0, $lastFilled + 1)), 'Level'.($i+1).'is blank, but a later level has a value - fill in every level up to that point.');
                 return null;
             }
         }
