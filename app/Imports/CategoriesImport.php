@@ -15,6 +15,10 @@ class CategoriesImport implements ToCollection, WithHeadingRow
 
     /** @var array<int, array{row: int, reason: string}> */
     public array $skipped = [];
+    public bool $dryRun = false;
+    private int $fakePreviewId = 0;
+    /** @var array<init, array{row: int,path:string, status:string,reason: ?string}> */
+    public array $preview = [];
 
     public function collection(Collection $rows): void
     {
@@ -24,7 +28,7 @@ class CategoriesImport implements ToCollection, WithHeadingRow
             $path = trim((string) ($row['path'] ?? ''));
 
             if ($path === '') {
-                $this->skipped[] = ['row' => $rowNumber, 'reason' => 'Missing Path.'];
+                $this->fail($rowNumber, $path, 'Missing Path.');
                 continue;
             }
 
@@ -34,30 +38,43 @@ class CategoriesImport implements ToCollection, WithHeadingRow
             ));
 
             if (empty($segments)) {
-                $this->skipped[] = ['row' => $rowNumber, 'reason' => 'Path had no usable segments.'];
+                $this->fail($rowNumber, $path, 'Path had no usable segments.');
                 continue;
             }
 
-            $createdIds = $this->walkPath($segments, $rowNumber);
+            $result = $this->walkPath($segments, $rowNumber, $path);
 
-            if ($createdIds !== null) {
+            if ($result === null) {
+               continue;
+            }
+
+            [$createdIds,$newCount] = $result;
+
+            if (! $this->dryRun){
                 array_push($this->importedIds, ...$createdIds);
             }
+            $status = $newCount > 0
+                ? 'will create ' . $newCount . ' new categor' . ($newCount === 1 ? 'y' : 'ies')
+                : 'already exists';
+
+            $this->preview[]=['row' => $rowNumber, 'path' => $path, 'status' => $status, 'reason' => null];
         }
     }
 
     /**
      * @param string[] $segments
      * @return int[]|null
+     * @return array{0: int[],I:int}|null
      */
-    private function walkPath(array $segments, int $rowNumber): ?array
+    private function walkPath(array $segments, int $rowNumber,string $fullPath): ?array
     {
         $parentId = null;
         $createdIds = [];
+        $newCount = 0;
 
         foreach ($segments as $segment) {
             if (mb_strlen($segment) > 255) {
-                $this->skipped[] = ['row' => $rowNumber, 'reason' => "Segment \"{$segment}\" exceeds 255 characters."];
+                $this->fail($rowNumber, $fullPath, "segment \"{$segment}\" exceeds 255 characters.");
 
                 return null;
             }
@@ -70,6 +87,12 @@ class CategoriesImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
+            if ($this->dryRun){
+                $parentId = --$this->fakePreviewId;
+                $newCount++;
+                continue;
+            }// this is just a placeholder 
+
             
             $trashed = Category::onlyTrashed()->where('name', $segment)->where('parent_id', $parentId)->first();
 
@@ -81,6 +104,13 @@ class CategoriesImport implements ToCollection, WithHeadingRow
             $parentId = $category->id;
         }
 
-        return $createdIds;
+        return [$createdIds,$newCount];
     }
+
+    private function fail(int $rowNumber, string $path, string $reason): void
+    {
+        $this->skipped[] = ['row' => $rowNumber, 'reason' => $reason];
+        $this->preview[] = ['row' => $rowNumber, 'path' => $path, 'status' => 'problem', 'reason' => $reason];
+    }
+    
 }

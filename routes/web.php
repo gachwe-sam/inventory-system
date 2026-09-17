@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/categories/import/undo', [CategoryController::class, 'undoImport'])->name('categories.import.undo');
     Route::get('/categories/import/template', [CategoryController::class, 'downloadImportTemplate'])->name('categories.import.template');
     Route::get('/categories/data', [CategoryController::class, 'data'])->name('categories.data');
+    Route::post('/categories/import/preview',[CategoryController::class, 'importPreview'])->name('categories.import.preview');
+    Route::post('/categories/import/confirm',[CategoryController::class, 'importConfirm'])->name('categories.import.confirm');
     Route::resource('categories', CategoryController::class);
 
     Route::get('/items/export/pdf', [ItemController::class, 'exportPdf'])->name('items.export.pdf');
@@ -43,6 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/items/import/template', [ItemController::class, 'downloadImportTemplate'])->name('items.import.template');
     Route::post('/items/import/undo', [ItemController::class, 'undoImport'])->name('items.import.undo');
     Route::get('/items/data', [ItemController::class, 'data'])->name('items.data');
+    Route::post('/items/import/preview', [ItemController::class, 'importPreview'])->name('items.import.preview');
+    Route::post('/items/import/confirm', [ItemController::class,'importConfirm'])->name('items.import.confirm');
     Route::resource('items', ItemController::class);
 
     Route::get('/branches/data', [BranchController::class, 'data'])->name('branches.data');

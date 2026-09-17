@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -243,6 +244,55 @@ class CategoryController extends Controller
             ->with('success', $message)
             ->with('import_skipped', $import->skipped);
     }
+
+    public function importPreview(Request $request)
+    {
+        $request->validate([
+            'spreadsheet' => 'required|file|mimes:xlsx,csv',
+        ]);
+
+        $path = $request->file('spreadsheet')->store('temp-imports');
+
+        $import = new \App\Imports\CategoriesImport();
+        $import->dryRun = true;
+        Excel::import($import, $path);
+
+        return view('categories.import-preview',[
+            'preview' => $import->preview,
+            'filePath' => $path,
+        ]);
+    }
+
+    public function importConfirm(Request $request)
+        {
+            $request->validate([
+                'file_path' => 'required|string',
+            ]);
+         
+            $path = $request->input('file_path');
+
+            if (! Storage::exists($path)){
+                return redirect()->route('categories.create')->with('error','That preview has expired - please upload the file again.');
+            }
+
+            $import = new \App\Imports\CategoriesImport();
+            Excel::import($import, $path);
+
+            Storage::delete($path);
+
+            session(['last_category_import_ids'=> $import->importedIds]);
+
+            $count =  count($import->importedIds);
+            $message = $count. ' categor' . ($count === 1? 'y': 'ies'). ' created.';
+
+            if (count ($import->skipped)>0){
+                $message .= '' . count($import->skipped). 'row(s) skipped.';
+            }
+
+            return redirect()->route('categories.index')
+                ->with('success', $message)
+                ->with('import_skipped', $import->skipped);
+        }
 
     /**
      * Soft-deletes exactly the categories the most recent import created

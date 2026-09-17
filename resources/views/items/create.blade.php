@@ -4,7 +4,7 @@
 @section('content')
 
 <x-ui.card title="Import Items">
-    <form method="POST" action="{{ route('items.import') }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-center flex-wrap">
+    <form method="POST" action="{{ route('items.import.preview') }}" enctype="multipart/form-data" class="d-flex gap-2 align-items-center flex-wrap">
         @csrf
         <input type="file" name="spreadsheet" accept=".xlsx,.csv" class="form-control" style="max-width: 320px;" required>
         <button type="submit" class="btn btn-outline-primary"><i class="bi bi-upload"></i> Import</button>
