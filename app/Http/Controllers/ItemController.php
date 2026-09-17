@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Branchstock;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
@@ -103,10 +104,58 @@ class ItemController extends Controller
             ->with('import_skipped', $import->skipped);
     }
 
+    public function importPreview(Request $request)
+    {
+        $request->validate([
+            'spreadsheet' => 'required|file|mimes:xlsx,csv',
+        ]);
+
+        $path = $request->file('spreadsheet')->store('temp-imports');
+
+        $import = new ItemsImport();
+        $import->dryRun = true;
+        Excel::import($import, $path);
+
+        return view('items.import-preview', [
+            'preview' =>$import->preview,
+            'filePath' => $path,
+        ]);
+    }
+
+    public function importConfirm(Request $request)
+    {
+        $request->validate([
+            'file_path' => 'required|string',
+        ]);
+
+        $path = $request->input('file_path');
+
+        if (! Storage::exists($path)){
+            return redirect()->route('items.create')->with('error', 'That preview has expired - please upload the file again.');
+        }
+
+        $import = new ItemsImport();
+        Excel::import($import, $path);
+        
+        storage::delete ($path);
+
+        session(['last_import_ids'=> $import->importedIds]);
+
+        $message = count($import->importedIds) . ' item(s) imported.';
+
+        if(count($import->skipped) >0){
+            $message .= ''.count($import->skipped) .'row(s) skipped.';
+        }
+
+        return redirect ()->route('items.index')
+            ->with('success', $message)
+            ->with('import_skipped', $import->skipped);
+    }
+
     public function downloadImportTemplate()
-{
-    return Excel::download(new \App\Exports\ItemsImportTemplateExport(), 'items-import-template.xlsx');
-}
+    {
+        return Excel::download(new \App\Exports\ItemsImportTemplateExport(), 'items-import-template.xlsx');
+    }
 
 
    
