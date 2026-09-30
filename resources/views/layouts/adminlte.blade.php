@@ -56,7 +56,7 @@
                          now on. No editing this file to add a page. --}}
                     @foreach ($menu as $item)
                         <li class="nav-item">
-                            <a href="{{ route($item['route']) }}"
+                            <a href="{{ call_user_func('route', $item['route']) }}"
                                @class(['nav-link', 'active' => request()->routeIs($item['pattern'])])>
                                 <i class="nav-icon bi {{ $item['icon'] }}"></i>
                                 <p>{{ $item['label'] }}</p>
@@ -70,7 +70,12 @@
 
     <main class="app-main">
         <div class="app-content-header">
-            <div class="container-fluid"><h3 class="mb-0">@yield('title')</h3></div>
+            <div class="container-fluid d-flex align-items-center gap-3">
+                @unless (request()->routeIs('dashboard'))
+                <x-ui.back-button/>
+                @endunless
+                <h3 class="mb-0">@yield('title')</h3>
+            </div>
         </div>
         <div class="app-content">
             <div class="container-fluid">
